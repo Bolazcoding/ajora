@@ -1,0 +1,149 @@
+@import "tailwindcss";
+
+/* :root {
+  --color-primary: #4a3026;
+  --color-primary-hover: #38231c;
+  --color-primary-light: #f0e7dc;
+
+  --color-secondary: #8b6854;
+  --color-secondary-hover: #735340;
+
+  --color-background: #f8f4ed;
+  --color-surface: #ffffff;
+  --color-surface-soft: #fcfaf6;
+  --color-surface-muted: #f0e7dc;
+
+  --color-text-primary: #30251f;
+  --color-text-secondary: #756960;
+  --color-text-muted: #998c81;
+  --color-text-inverse: #ffffff;
+
+  --color-border: #e9ded0;
+  --color-border-strong: #d7c6b5;
+  --color-divider: #eee6dc;
+
+  --color-button-primary: #4a3026;
+  --color-button-primary-hover: #38231c;
+  --color-button-primary-text: #ffffff;
+
+  --color-button-secondary: #f0e7dc;
+  --color-button-secondary-hover: #e9ded0;
+  --color-button-secondary-text: #4a3026;
+
+  --color-success: #3f7455;
+  --color-success-bg: #eaf3ec;
+
+  --color-warning: #98651f;
+  --color-warning-bg: #fbf0d9;
+
+  --color-danger: #ad4943;
+  --color-danger-bg: #f9eae8;
+
+  --color-info: #5a6f8c;
+  --color-info-bg: #eaf0f7;
+
+  --color-focus: #8b6854;
+  --color-overlay: rgb(48 37 31 / 45%);
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+
+  --shadow-card: 0 2px 8px rgb(74 48 38 / 4%), 0 1px 2px rgb(74 48 38 / 3%);
+} */
+
+@theme {
+  /* ==============================
+     AJORA — BRAND COLORS
+  ============================== */
+
+  --color-primary: #4a3026;
+  --color-primary-hover: #38231c;
+  --color-primary-light: #f0e7dc;
+
+  --color-secondary: #8b6854;
+  --color-secondary-hover: #735340;
+
+  /* ==============================
+     BACKGROUND COLORS
+  ============================== */
+
+  --color-background: #f8f4ed;
+  --color-surface: #ffffff;
+  --color-surface-soft: #fcfaf6;
+  --color-surface-muted: #f0e7dc;
+
+  /* ==============================
+     TEXT COLORS
+  ============================== */
+
+  --color-text-primary: #30251f;
+  --color-text-secondary: #756960;
+  --color-text-muted: #998c81;
+  --color-text-inverse: #ffffff;
+
+  /* ==============================
+     BORDERS & DIVIDERS
+  ============================== */
+
+  --color-border: #e9ded0;
+  --color-border-strong: #d7c6b5;
+  --color-divider: #eee6dc;
+
+  /* ==============================
+     BUTTONS
+  ============================== */
+
+  --color-button-primary: #4a3026;
+  --color-button-primary-hover: #38231c;
+  --color-button-primary-text: #ffffff;
+
+  --color-button-secondary: #f0e7dc;
+  --color-button-secondary-hover: #e9ded0;
+  --color-button-secondary-text: #4a3026;
+
+  /* ==============================
+     STATUS COLORS
+  ============================== */
+
+  --color-success: #3f7455;
+  --color-success-bg: #eaf3ec;
+
+  --color-warning: #98651f;
+  --color-warning-bg: #fbf0d9;
+
+  --color-danger: #ad4943;
+  --color-danger-bg: #f9eae8;
+
+  --color-info: #5a6f8c;
+  --color-info-bg: #eaf0f7;
+
+  /* ==============================
+     FOCUS & INTERACTION
+  ============================== */
+
+  --color-focus: #8b6854;
+  --color-overlay: rgb(48 37 31 / 45%);
+
+  /* ==============================
+     OPTIONAL DESIGN TOKENS
+  ============================== */
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+
+  --shadow-card: 0 2px 8px rgb(74 48 38 / 4%), 0 1px 2px rgb(74 48 38 / 3%);
+}
+
+/* @media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+} */
+
+body {
+}
