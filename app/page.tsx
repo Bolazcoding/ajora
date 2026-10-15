@@ -55,7 +55,7 @@ export default function Onboarding() {
               />
             </div>
 
-            <div className="absolute -left-[14%] bottom-[10%] z-10 flex min-h-[3.5625rem] animate-[card-arrive_650ms_ease-out_160ms_both] items-center gap-2 rounded-[0.9375rem] border border-primary/5 bg-white px-3 py-2.5 text-left shadow-[0_0.625rem_1.75rem_rgb(74_48_38_/_13%),0_0.125rem_0.3125rem_rgb(74_48_38_/_5%)] motion-reduce:animate-none md:-left-[10%] md:bottom-[12%]">
+            <div className="absolute -left-[10%] bottom-[10%] z-10 flex min-h-[3.5625rem] animate-[card-arrive_650ms_ease-out_160ms_both] items-center gap-2 rounded-[0.9375rem] border border-primary/5 bg-white px-3 py-2.5 text-left shadow-[0_0.625rem_1.75rem_rgb(74_48_38_/_13%),0_0.125rem_0.3125rem_rgb(74_48_38_/_5%)] motion-reduce:animate-none md:-left-[5%] md:bottom-[12%]">
               <span className="grid size-8 flex-none place-items-center rounded-[0.625rem] bg-[#f5eee5] text-secondary sm:size-9">
                 <span className="size-6">
                   <AjoMark />
