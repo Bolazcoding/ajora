@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
 import AjoMark from "../_ui/AjoMark";
 import {
   FiBell,
@@ -8,6 +11,7 @@ import {
   FiMenu,
   FiSettings,
   FiUsers,
+  FiX,
 } from "react-icons/fi";
 import type { IconType } from "react-icons";
 import Link from "next/link";
@@ -38,23 +42,69 @@ function ProfileAvatar({ className = "" }: { className?: string }) {
 }
 
 export default function DashboardPage() {
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!isMobileNavOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setIsMobileNavOpen(false);
+    };
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", closeOnEscape);
+    closeButtonRef.current?.focus();
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", closeOnEscape);
+      menuButtonRef.current?.focus();
+    };
+  }, [isMobileNavOpen]);
+
   return (
     <div className="min-h-svh bg-background text-text-primary md:flex">
-      <aside className="hidden shrink-0 border-r border-border bg-surface-soft md:flex md:w-[5rem] md:flex-col md:items-center md:px-3 md:py-6 xl:w-[16.5rem] xl:items-stretch xl:px-5">
-        <Link
-          href="/"
-          aria-label="Ajora home"
-          className="flex items-center gap-3 px-1 text-primary"
-        >
-          <span className="grid size-10 shrink-0 place-items-center rounded-full bg-primary text-white shadow-sm">
-            <span className="size-7">
-              <AjoMark />
+      {isMobileNavOpen && (
+        <button
+          type="button"
+          aria-label="Close navigation"
+          onClick={() => setIsMobileNavOpen(false)}
+          className="fixed inset-0 z-40 bg-primary/30 backdrop-blur-[2px] md:hidden"
+        />
+      )}
+
+      <aside
+        id="dashboard-navigation"
+        className={`${isMobileNavOpen ? "fixed inset-y-0 left-0 z-50 flex w-[min(18rem,88vw)]" : "hidden"} shrink-0 flex-col border-r border-border bg-surface-soft px-5 py-6 shadow-xl md:static md:z-auto md:flex md:h-svh md:w-[16.5rem] md:items-stretch md:px-5 md:py-6 md:shadow-none`}
+      >
+        <div className="flex w-full items-center justify-between">
+          <Link
+            href="/"
+            aria-label="Ajora home"
+            className="flex items-center gap-3 px-1 text-primary"
+          >
+            <span className="grid size-10 shrink-0 place-items-center rounded-full bg-primary text-white shadow-sm">
+              <span className="size-7">
+                <AjoMark />
+              </span>
             </span>
-          </span>
-          <span className="hidden font-sans text-xl font-bold tracking-tight xl:inline">
-            Ajora
-          </span>
-        </Link>
+            <span className="font-sans text-xl font-bold tracking-tight">
+              Ajora
+            </span>
+          </Link>
+          <button
+            ref={closeButtonRef}
+            type="button"
+            aria-label="Close navigation"
+            onClick={() => setIsMobileNavOpen(false)}
+            className="grid size-10 place-items-center rounded-full border border-border bg-surface text-primary md:hidden"
+          >
+            <FiX aria-hidden="true" className="size-5" />
+          </button>
+        </div>
 
         <nav
           aria-label="Dashboard"
@@ -64,11 +114,13 @@ export default function DashboardPage() {
             const Icon = item.icon;
 
             return (
-              <div
+              <button
+                type="button"
                 key={item.label}
                 aria-current={item.active ? "page" : undefined}
                 title={item.label}
-                className={`group flex min-h-11 items-center justify-center gap-3 rounded-xl px-3 text-sm font-medium transition-colors xl:justify-start ${
+                onClick={() => setIsMobileNavOpen(false)}
+                className={`group flex min-h-11 w-full items-center justify-start gap-3 rounded-xl px-3 text-left text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-focus focus-visible:outline-offset-2 ${
                   item.active
                     ? "bg-primary-light text-primary"
                     : "text-text-secondary hover:bg-primary-light/65 hover:text-primary"
@@ -78,16 +130,16 @@ export default function DashboardPage() {
                   aria-hidden="true"
                   className={`size-5 shrink-0 ${item.active ? "text-primary" : "text-secondary"}`}
                 />
-                <span className="hidden xl:inline">{item.label}</span>
-              </div>
+                <span>{item.label}</span>
+              </button>
             );
           })}
         </nav>
 
         <div className="mt-auto border-t border-border pt-5">
-          <div className="flex items-center gap-3 rounded-xl px-1 py-2 md:justify-center xl:justify-start">
+          <div className="flex items-center gap-3 rounded-xl px-1 py-2">
             <ProfileAvatar />
-            <span className="hidden min-w-0 flex-1 xl:block">
+            <span className="min-w-0 flex-1">
               <span className="block truncate text-sm font-semibold text-primary">
                 Mobolaji O.
               </span>
@@ -97,7 +149,7 @@ export default function DashboardPage() {
             </span>
             <FiChevronDown
               aria-hidden="true"
-              className="hidden size-4 text-text-muted xl:inline-flex"
+              className="size-4 text-text-muted"
             />
           </div>
         </div>
@@ -143,12 +195,17 @@ export default function DashboardPage() {
                   className="hidden size-4 text-text-muted lg:inline-flex"
                 />
               </button>
-              <span
-                aria-hidden="true"
-                className="grid size-10 place-items-center rounded-full border border-border bg-surface text-primary md:hidden"
+              <button
+                ref={menuButtonRef}
+                type="button"
+                aria-label="Open navigation"
+                aria-controls="dashboard-navigation"
+                aria-expanded={isMobileNavOpen}
+                onClick={() => setIsMobileNavOpen(true)}
+                className="grid size-10 place-items-center rounded-full border border-border bg-surface text-primary transition-colors hover:bg-primary-light/50 focus-visible:outline-2 focus-visible:outline-focus focus-visible:outline-offset-2 md:hidden"
               >
-                <FiMenu />
-              </span>
+                <FiMenu aria-hidden="true" className="size-5" />
+              </button>
             </div>
           </div>
 
