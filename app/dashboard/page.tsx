@@ -43,6 +43,7 @@ function ProfileAvatar({ className = "" }: { className?: string }) {
 
 export default function DashboardPage() {
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
+  const [isDesktopSidebarOpen, setIsDesktopSidebarOpen] = useState(true);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -78,7 +79,7 @@ export default function DashboardPage() {
 
       <aside
         id="dashboard-navigation"
-        className={`${isMobileNavOpen ? "fixed inset-y-0 left-0 z-50 flex w-[min(18rem,88vw)]" : "hidden"} shrink-0 flex-col border-r border-border bg-surface-soft px-5 py-6 shadow-xl md:static md:z-auto md:flex md:h-svh md:w-[16.5rem] md:items-stretch md:px-5 md:py-6 md:shadow-none`}
+        className={`${isMobileNavOpen ? "fixed inset-y-0 left-0 z-50 flex w-[min(18rem,88vw)]" : "hidden"} shrink-0 flex-col border-r border-border bg-surface-soft px-5 py-6 shadow-xl md:static md:z-auto md:h-svh md:w-[16.5rem] md:items-stretch md:px-5 md:py-6 md:shadow-none ${isDesktopSidebarOpen ? "md:flex" : "md:hidden"}`}
       >
         <div className="flex w-full items-center justify-between">
           <Link
@@ -158,6 +159,19 @@ export default function DashboardPage() {
       <main className="flex min-h-svh min-w-0 flex-1 flex-col">
         <header className="border-b border-border px-5 pb-6 pt-5 sm:px-8 sm:pt-7 xl:px-10 xl:pb-8">
           <div className="flex items-center justify-between gap-4">
+            <button
+              type="button"
+              aria-label={
+                isDesktopSidebarOpen ? "Close sidebar" : "Open sidebar"
+              }
+              aria-controls="dashboard-navigation"
+              aria-expanded={isDesktopSidebarOpen}
+              onClick={() => setIsDesktopSidebarOpen((isOpen) => !isOpen)}
+              className="hidden size-10 place-items-center rounded-full border border-border bg-surface text-primary transition-colors hover:bg-primary-light/50 focus-visible:outline-2 focus-visible:outline-focus focus-visible:outline-offset-2 md:grid"
+            >
+              <FiMenu aria-hidden="true" className="size-5" />
+            </button>
+
             <Link
               href="/"
               aria-label="Ajora home"
