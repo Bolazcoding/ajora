@@ -1,7 +1,9 @@
+import "./_styles/global.css";
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className="">
-      <body className="">{children}</body>
+    <html lang="en">
+      <body>{children}</body>
     </html>
   );
 }
