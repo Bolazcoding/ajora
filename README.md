@@ -1,36 +1,90 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Ajora
+
+Ajora is a web-based platform concept for managing rotating Ajo contribution groups. It helps group organisers and members view contribution summaries, track payment statuses, and follow payout turns from one dashboard.
+
+This project is being developed as part of the BuildLab Africa Stage 1 Frontend Development programme.
+
+## Project Overview
+
+Traditional Ajo groups often rely on chats or spreadsheets to coordinate contributions and payout schedules. Ajora aims to make this process easier to follow through a clear, responsive dashboard.
+
+## Features
+
+- Dashboard overview for contribution summaries.
+- Member and contribution tracking.
+- Payout order and upcoming payout information.
+- Responsive interface for desktop and mobile screens.
+- Interactive UI elements for navigating and managing displayed information.
+
+## Tech Stack
+
+- **Next.js** — React framework.
+- **TypeScript** — Type-safe JavaScript.
+- **Tailwind CSS** — Utility-first styling.
+- **Mock data** — Sample data for the frontend prototype.
+- **Vercel** — Deployment platform.
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js installed.
+- npm installed.
+- Git installed.
+
+### Installation
+
+Clone the repository:
+
+```bash
+git clone https://github.com/Bolazcoding/ajora.git
+```
+
+Navigate into the project directory:
+
+```bash
+cd ajora
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Start the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Other Commands
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm run start
+```
 
-## Learn More
+Run `npm run build` to build the production application. Run `npm run start` after a successful build to start the production server.
 
-To learn more about Next.js, take a look at the following resources:
+These commands assume the corresponding scripts are defined in `package.json`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Live Demo
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+https://mobolaji-ajora.vercel.app/
 
-## Deploy on Vercel
+## Repository
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+https://github.com/Bolazcoding/ajora
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Project Scope
+
+Ajora is currently a frontend prototype using mock/sample data. Real-money transactions, bank integrations, and production backend functionality are outside the current scope.
+
+## Development Plan
+
+- **Week 1 — Foundations:** Responsive screen, initial interactions, project documentation and deployment.
+- **Week 2 — Components and Data:** Reusable components, mock-data integration, interface states and feedback improvements.
+- **Week 3 — Quality and Delivery:** Routing, state management, accessibility checks, automated tests and final documentation.
