@@ -158,7 +158,7 @@ export default function DashboardPage() {
         </div>
       </aside>
 
-      <main className="flex h-svh min-h-0 min-w-0 flex-1 flex-col">
+      <main className="flex h-svh min-h-0 min-w-0 flex-1 flex-col overflow-y-auto overscroll-contain">
         <header className="border-b border-border px-5 pb-6 pt-5 sm:px-8 sm:pt-7 xl:px-10 xl:pb-8">
           <div className="flex items-center justify-between gap-4">
             <button
@@ -237,7 +237,7 @@ export default function DashboardPage() {
 
         <section
           aria-label="Dashboard content"
-          className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 py-6 sm:px-8 xl:px-10"
+          className="min-h-0 flex-1 px-5 py-6 sm:px-8 xl:px-10"
         >
           <article className="relative isolate mx-auto w-full max-w-6xl overflow-hidden rounded-[1.75rem] bg-primary text-[#f8f4ed] shadow-[0_1.5rem_4rem_rgb(74_48_38_/_16%)]">
             <div
