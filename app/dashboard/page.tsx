@@ -3,8 +3,10 @@
 import { useEffect, useRef, useState } from "react";
 import AjoMark from "../_ui/AjoMark";
 import {
+  FiAlertCircle,
   FiBell,
   FiCalendar,
+  FiCheckCircle,
   FiChevronDown,
   FiClock,
   FiGrid,
@@ -67,7 +69,7 @@ export default function DashboardPage() {
   }, [isMobileNavOpen]);
 
   return (
-    <div className="min-h-svh bg-background text-text-primary md:flex">
+    <div className="h-svh overflow-hidden bg-background text-text-primary md:flex">
       {isMobileNavOpen && (
         <button
           type="button"
@@ -156,7 +158,7 @@ export default function DashboardPage() {
         </div>
       </aside>
 
-      <main className="flex min-h-svh min-w-0 flex-1 flex-col">
+      <main className="flex h-svh min-h-0 min-w-0 flex-1 flex-col">
         <header className="border-b border-border px-5 pb-6 pt-5 sm:px-8 sm:pt-7 xl:px-10 xl:pb-8">
           <div className="flex items-center justify-between gap-4">
             <button
@@ -235,7 +237,7 @@ export default function DashboardPage() {
 
         <section
           aria-label="Dashboard content"
-          className="min-h-0 flex-1 px-5 py-6 sm:px-8 xl:px-10"
+          className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 py-6 sm:px-8 xl:px-10"
         >
           <article className="relative isolate mx-auto w-full max-w-6xl overflow-hidden rounded-[1.75rem] bg-primary text-[#f8f4ed] shadow-[0_1.5rem_4rem_rgb(74_48_38_/_16%)]">
             <div
@@ -339,6 +341,74 @@ export default function DashboardPage() {
               </div>
             </div>
           </article>
+
+          <div className="mx-auto mt-5 grid w-full max-w-6xl grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
+            <article className="rounded-2xl border border-border bg-white p-5 shadow-card sm:p-6">
+              <div className="flex items-center justify-between gap-3">
+                <h2 className="text-sm font-semibold text-text-primary">
+                  Paid
+                </h2>
+                <span className="grid size-9 place-items-center rounded-xl bg-success-bg text-success">
+                  <FiCheckCircle
+                    aria-hidden="true"
+                    className="size-[1.125rem]"
+                  />
+                </span>
+              </div>
+              <p
+                aria-label="Value unavailable"
+                className="mt-5 text-3xl font-semibold tracking-tight text-text-primary"
+              >
+                &mdash;
+              </p>
+              <p className="mt-1.5 text-xs text-text-secondary sm:text-sm">
+                Contributions received
+              </p>
+            </article>
+
+            <article className="rounded-2xl border border-border bg-white p-5 shadow-card sm:p-6">
+              <div className="flex items-center justify-between gap-3">
+                <h2 className="text-sm font-semibold text-text-primary">
+                  Pending
+                </h2>
+                <span className="grid size-9 place-items-center rounded-xl bg-warning-bg text-warning">
+                  <FiClock aria-hidden="true" className="size-[1.125rem]" />
+                </span>
+              </div>
+              <p
+                aria-label="Value unavailable"
+                className="mt-5 text-3xl font-semibold tracking-tight text-text-primary"
+              >
+                &mdash;
+              </p>
+              <p className="mt-1.5 text-xs text-text-secondary sm:text-sm">
+                Awaiting payment
+              </p>
+            </article>
+
+            <article className="rounded-2xl border border-border bg-white p-5 shadow-card sm:p-6">
+              <div className="flex items-center justify-between gap-3">
+                <h2 className="text-sm font-semibold text-text-primary">
+                  Overdue
+                </h2>
+                <span className="grid size-9 place-items-center rounded-xl bg-danger-bg text-danger">
+                  <FiAlertCircle
+                    aria-hidden="true"
+                    className="size-[1.125rem]"
+                  />
+                </span>
+              </div>
+              <p
+                aria-label="Value unavailable"
+                className="mt-5 text-3xl font-semibold tracking-tight text-text-primary"
+              >
+                &mdash;
+              </p>
+              <p className="mt-1.5 text-xs text-text-secondary sm:text-sm">
+                Payment past due
+              </p>
+            </article>
+          </div>
         </section>
       </main>
     </div>
