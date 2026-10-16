@@ -4,7 +4,7 @@ import { FiSearch, FiUsers } from "react-icons/fi";
 export default function MembersPage() {
   return (
     <DashboardShell activeItem="Members">
-      <div className="mx-auto w-full max-w-6xl">
+      <div className="mx-auto pb-10 w-full max-w-6xl">
         <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <h2 className="font-sans text-2xl font-bold tracking-tight text-primary sm:text-3xl">

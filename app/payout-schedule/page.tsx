@@ -4,7 +4,7 @@ import { FiCalendar, FiClock, FiRepeat, FiUser } from "react-icons/fi";
 export default function PayoutSchedulePage() {
   return (
     <DashboardShell activeItem="Payout Schedule">
-      <div className="mx-auto w-full max-w-6xl">
+      <div className="mx-auto pb-10 w-full max-w-6xl">
         <div>
           <h2 className="font-sans text-2xl font-bold tracking-tight text-primary sm:text-3xl">
             Payout Schedule
