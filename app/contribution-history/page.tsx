@@ -4,7 +4,7 @@ import { FiCalendar, FiClock, FiSearch } from "react-icons/fi";
 const summaryItems = [
   {
     label: "Total contributions recorded",
-    icon: "₦",
+    // icon: "₦",
   },
   {
     label: "Contributions this period",
@@ -53,7 +53,7 @@ export default function ContributionHistoryPage() {
                         aria-hidden="true"
                         className="text-lg font-semibold leading-none"
                       >
-                        {icon}
+                        ₦
                       </span>
                     )}
                   </span>
