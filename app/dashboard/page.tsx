@@ -4,14 +4,17 @@ import { useEffect, useRef, useState } from "react";
 import AjoMark from "../_ui/AjoMark";
 import {
   FiAlertCircle,
+  FiArrowRight,
   FiBell,
   FiCalendar,
   FiCheckCircle,
   FiChevronDown,
   FiClock,
   FiGrid,
+  FiInbox,
   FiMenu,
   FiSettings,
+  FiUser,
   FiUsers,
   FiX,
 } from "react-icons/fi";
@@ -342,7 +345,7 @@ export default function DashboardPage() {
             </div>
           </article>
 
-          <div className="mx-auto mt-5 grid w-full max-w-6xl grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
+          <div className="mx-auto mt-5 pb-10 grid w-full max-w-6xl grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
             <article className="rounded-2xl border border-border bg-white p-5 shadow-card sm:p-6">
               <div className="flex items-center justify-between gap-3">
                 <h2 className="text-sm font-semibold text-text-primary">
@@ -407,6 +410,106 @@ export default function DashboardPage() {
               <p className="mt-1.5 text-xs text-text-secondary sm:text-sm">
                 Payment past due
               </p>
+            </article>
+          </div>
+
+          <div className="mx-auto mt-5 grid w-full max-w-6xl grid-cols-1 gap-5 pb-10 lg:grid-cols-[minmax(18rem,0.85fr)_minmax(0,1.15fr)]">
+            <article className="rounded-2xl border border-border bg-white p-5 shadow-card sm:p-6">
+              <div className="flex items-start gap-3">
+                <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-primary-light text-primary">
+                  <FiCalendar aria-hidden="true" className="size-5" />
+                </span>
+                <div>
+                  <h2 className="text-base font-semibold text-primary">
+                    Upcoming Payout
+                  </h2>
+                  <p className="mt-1 text-xs leading-5 text-text-secondary sm:text-sm">
+                    Your next payout in the rotation
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-6 flex items-center gap-3 rounded-xl bg-surface-soft p-3.5">
+                <span className="grid size-11 shrink-0 place-items-center rounded-full border border-border bg-white text-text-muted">
+                  <FiUser aria-hidden="true" className="size-5" />
+                </span>
+                <div className="min-w-0">
+                  <p className="text-[0.6875rem] font-medium uppercase tracking-wide text-text-muted">
+                    Recipient
+                  </p>
+                  <p className="mt-0.5 truncate text-sm font-semibold text-text-primary">
+                    Not available
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-5 rounded-xl border border-border bg-white p-4">
+                <p className="text-xs font-medium text-text-secondary">
+                  Expected payout amount
+                </p>
+                <p className="mt-1.5 text-2xl font-semibold tracking-tight text-primary">
+                  &mdash;
+                </p>
+              </div>
+
+              <div className="mt-5 grid grid-cols-2 gap-4">
+                <div>
+                  <p className="text-xs font-medium text-text-secondary">
+                    Payout date
+                  </p>
+                  <p className="mt-1.5 text-sm font-semibold text-text-primary">
+                    &mdash;
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs font-medium text-text-secondary">
+                    Payout turn
+                  </p>
+                  <p className="mt-1.5 text-sm font-semibold text-text-primary">
+                    &mdash;
+                  </p>
+                </div>
+              </div>
+            </article>
+
+            <article className="rounded-2xl border border-border bg-white p-5 shadow-card sm:p-6">
+              <div className="flex flex-wrap items-start justify-between gap-4">
+                <div>
+                  <h2 className="text-base font-semibold text-primary">
+                    Recent Contributions
+                  </h2>
+                  <p className="mt-1 text-xs leading-5 text-text-secondary sm:text-sm">
+                    A snapshot of recent group activity
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  disabled
+                  className="inline-flex items-center gap-1.5 rounded-lg py-1 text-xs font-semibold text-secondary transition-colors disabled:cursor-not-allowed disabled:opacity-75 sm:text-sm"
+                >
+                  View history
+                  <FiArrowRight aria-hidden="true" className="size-4" />
+                </button>
+              </div>
+
+              <div className="mt-6 grid grid-cols-[1.1fr_0.8fr_0.8fr_auto] gap-2 border-b border-border px-1 pb-3 text-[0.625rem] font-semibold uppercase tracking-wide text-text-muted sm:gap-4 sm:text-[0.6875rem]">
+                <span>Member</span>
+                <span>Amount</span>
+                <span>Date</span>
+                <span>Status</span>
+              </div>
+
+              <div className="flex min-h-44 flex-col items-center justify-center px-4 py-8 text-center">
+                <span className="grid size-11 place-items-center rounded-2xl bg-primary-light/70 text-secondary">
+                  <FiInbox aria-hidden="true" className="size-5" />
+                </span>
+                <p className="mt-4 text-sm font-semibold text-primary">
+                  No contributions to show yet
+                </p>
+                <p className="mt-1.5 max-w-xs text-xs leading-5 text-text-secondary sm:text-sm">
+                  Contribution records will appear soon.
+                </p>
+              </div>
             </article>
           </div>
         </section>
