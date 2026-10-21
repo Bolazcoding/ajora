@@ -1,17 +1,5 @@
-import Link from "next/link";
+import AuthPage from "../_components/AuthPage";
 
-function page() {
-  return (
-    <section>
-      <p>Login page coming soon...</p>
-      <p>You can navigate to dashboard</p>
-      <span>
-        <Link className="underline hover:text-red-600" href="/dashboard">
-          Go to dashboard
-        </Link>
-      </span>
-    </section>
-  );
+export default function LoginPage() {
+  return <AuthPage mode="login" />;
 }
-
-export default page;
