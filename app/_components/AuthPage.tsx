@@ -3,6 +3,7 @@
 import { useState, type FormEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import AjoMark from "../_ui/AjoMark";
 
@@ -121,6 +122,7 @@ function AuthField({
 }
 
 export default function AuthPage({ mode }: AuthPageProps) {
+  const router = useRouter();
   const signup = mode === "signup";
   const [values, setValues] = useState({
     name: "",
@@ -146,6 +148,7 @@ export default function AuthPage({ mode }: AuthPageProps) {
     if (signup && values.confirm !== values.password)
       next.confirm = "Your passwords do not match.";
     setErrors(next);
+    if (Object.keys(next).length === 0) router.push("/dashboard");
   }
 
   const heading = signup ? "Start growing together." : "Welcome back.";
