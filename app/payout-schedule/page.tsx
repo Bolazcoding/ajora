@@ -1,5 +1,6 @@
 import DashboardShell from "../_components/DashboardShell";
 import { FiCalendar, FiClock, FiRepeat, FiUser } from "react-icons/fi";
+import EmptyState from "../_ui/EmptyState";
 
 export default function PayoutSchedulePage() {
   return (
@@ -137,7 +138,11 @@ export default function PayoutSchedulePage() {
               <tbody>
                 <tr>
                   <td colSpan={4} className="px-6 py-16 text-center">
-                    <RotationEmptyState />
+                    <EmptyState
+                      icon={FiRepeat}
+                      title="No payout schedule yet"
+                      description="Payout turns will appear here when your Ajo group schedule is connected."
+                    />
                   </td>
                 </tr>
               </tbody>
@@ -145,26 +150,14 @@ export default function PayoutSchedulePage() {
           </div>
 
           <div className="px-5 py-14 text-center md:hidden">
-            <RotationEmptyState />
+            <EmptyState
+              icon={FiRepeat}
+              title="No payout schedule yet"
+              description="Payout turns will appear here when your Ajo group schedule is connected."
+            />
           </div>
         </section>
       </div>
     </DashboardShell>
-  );
-}
-
-function RotationEmptyState() {
-  return (
-    <div className="mx-auto flex max-w-sm flex-col items-center">
-      <span className="grid size-14 place-items-center rounded-2xl bg-primary-light text-secondary">
-        <FiRepeat aria-hidden="true" className="size-6" />
-      </span>
-      <p className="mt-4 text-base font-semibold text-primary">
-        No payout schedule yet
-      </p>
-      <p className="mt-1.5 text-sm leading-6 text-text-secondary">
-        Payout turns will appear here when your Ajo group schedule is connected.
-      </p>
-    </div>
   );
 }

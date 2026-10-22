@@ -1,5 +1,6 @@
 import DashboardShell from "../_components/DashboardShell";
 import { FiCalendar, FiClock, FiSearch } from "react-icons/fi";
+import EmptyState from "../_ui/EmptyState";
 
 const summaryItems = [
   {
@@ -167,7 +168,11 @@ export default function ContributionHistoryPage() {
               <tbody>
                 <tr>
                   <td colSpan={5} className="px-6 py-16 text-center">
-                    <HistoryEmptyState />
+                    <EmptyState
+                      icon={FiClock}
+                      title="No contribution history yet"
+                      description="Recorded contributions will appear here once contribution data is connected."
+                    />
                   </td>
                 </tr>
               </tbody>
@@ -175,27 +180,14 @@ export default function ContributionHistoryPage() {
           </div>
 
           <div className="px-5 py-14 text-center md:hidden">
-            <HistoryEmptyState />
+            <EmptyState
+              icon={FiClock}
+              title="No contribution history yet"
+              description="Recorded contributions will appear here once contribution data is connected."
+            />
           </div>
         </section>
       </div>
     </DashboardShell>
-  );
-}
-
-function HistoryEmptyState() {
-  return (
-    <div className="mx-auto flex max-w-sm flex-col items-center">
-      <span className="grid size-14 place-items-center rounded-2xl bg-primary-light text-secondary">
-        <FiClock aria-hidden="true" className="size-6" />
-      </span>
-      <h3 className="mt-4 text-base font-semibold text-primary">
-        No contribution history yet
-      </h3>
-      <p className="mt-1.5 text-sm leading-6 text-text-secondary">
-        Recorded contributions will appear here once contribution data is
-        connected.
-      </p>
-    </div>
   );
 }

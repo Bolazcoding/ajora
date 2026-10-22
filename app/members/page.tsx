@@ -1,5 +1,6 @@
 import DashboardShell from "../_components/DashboardShell";
 import { FiSearch, FiUsers } from "react-icons/fi";
+import EmptyState from "../_ui/EmptyState";
 
 export default function MembersPage() {
   return (
@@ -82,7 +83,11 @@ export default function MembersPage() {
               <tbody>
                 <tr>
                   <td colSpan={5} className="px-6 py-16 text-center">
-                    <EmptyState />
+                    <EmptyState
+                      icon={FiUsers}
+                      title="No members yet"
+                      description="Members added to your Ajo group will appear here."
+                    />
                   </td>
                 </tr>
               </tbody>
@@ -90,26 +95,14 @@ export default function MembersPage() {
           </div>
 
           <div className="px-5 py-14 text-center lg:hidden">
-            <EmptyState />
+            <EmptyState
+              icon={FiUsers}
+              title="No members yet"
+              description="Members added to your Ajo group will appear here."
+            />
           </div>
         </section>
       </div>
     </DashboardShell>
-  );
-}
-
-function EmptyState() {
-  return (
-    <div className="mx-auto flex max-w-sm flex-col items-center">
-      <span className="grid size-14 place-items-center rounded-2xl bg-primary-light text-secondary">
-        <FiUsers aria-hidden="true" className="size-6" />
-      </span>
-      <h3 className="mt-4 text-base font-semibold text-primary">
-        No members yet
-      </h3>
-      <p className="mt-1.5 text-sm leading-6 text-text-secondary">
-        Members added to your Ajo group will appear here.
-      </p>
-    </div>
   );
 }
