@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import DashboardShell from "./DashboardShell";
 import {
@@ -14,20 +16,24 @@ import {
   ajoMembers,
   calculatePayoutAmount,
   contributionCycles,
-  contributionRecords,
   getCycleContributionSummary,
   payoutSchedule,
 } from "../_data/mockData";
 import EmptyState from "../_ui/EmptyState";
 import StatusBadge from "../_ui/StatusBadge";
 import { formatDate, formatNaira } from "../_ui/formatters";
+import { useContributionDemo } from "../_state/ContributionDemoProvider";
 
 export default function DashboardOverview() {
+  const { contributionRecords } = useContributionDemo();
   const cycle = contributionCycles.find(
     (item) => item.id === activeAjoGroup.currentCycleId,
   );
   const cycleSummary = getCycleContributionSummary(
     activeAjoGroup.currentCycleId,
+    activeAjoGroup,
+    ajoMembers,
+    contributionRecords,
   );
   const activeMembers = ajoMembers.filter(
     (member) => member.groupId === activeAjoGroup.id && member.isActive,

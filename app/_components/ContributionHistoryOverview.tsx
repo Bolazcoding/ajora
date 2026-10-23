@@ -9,10 +9,10 @@ import {
   activeAjoGroup,
   ajoMembers,
   contributionCycles,
-  contributionRecords,
   type PaymentStatus,
 } from "../_data/mockData";
 import { formatDate, formatNaira } from "../_ui/formatters";
+import { useContributionDemo } from "../_state/ContributionDemoProvider";
 
 type StatusFilter = "all" | PaymentStatus;
 
@@ -30,6 +30,7 @@ const summaryCards = [
 ] as const;
 
 export default function ContributionHistoryOverview() {
+  const { contributionRecords } = useContributionDemo();
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [cycleFilter, setCycleFilter] = useState("all");

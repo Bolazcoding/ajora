@@ -2,15 +2,16 @@
 
 import { useState } from "react";
 import DashboardShell from "./DashboardShell";
+import RecordContributionDialog from "./RecordContributionDialog";
 import { FiSearch, FiUsers } from "react-icons/fi";
 import EmptyState from "../_ui/EmptyState";
 import StatusBadge from "../_ui/StatusBadge";
 import {
   activeAjoGroup,
   ajoMembers,
-  contributionRecords,
   type MemberContributionStatus,
 } from "../_data/mockData";
+import { useContributionDemo } from "../_state/ContributionDemoProvider";
 import { formatDate, formatNaira } from "../_ui/formatters";
 
 type MemberRow = {
@@ -47,6 +48,8 @@ function MemberStatus({ status }: { status: MemberContributionStatus }) {
 export default function MembersOverview() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
+  const [isRecording, setIsRecording] = useState(false);
+  const { contributionRecords } = useContributionDemo();
 
   const memberRows: MemberRow[] = ajoMembers
     .filter(
@@ -107,7 +110,7 @@ export default function MembersOverview() {
           </div>
           <button
             type="button"
-            disabled
+            onClick={() => setIsRecording(true)}
             className="inline-flex min-h-11 items-center justify-center rounded-xl bg-primary px-5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-focus focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-70"
           >
             Record Contribution
@@ -276,6 +279,9 @@ export default function MembersOverview() {
           )}
         </section>
       </div>
+      {isRecording && (
+        <RecordContributionDialog onClose={() => setIsRecording(false)} />
+      )}
     </DashboardShell>
   );
 }
