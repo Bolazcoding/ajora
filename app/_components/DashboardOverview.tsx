@@ -1,3 +1,4 @@
+import Link from "next/link";
 import DashboardShell from "./DashboardShell";
 import {
   FiAlertCircle,
@@ -8,8 +9,51 @@ import {
   FiInbox,
   FiUser,
 } from "react-icons/fi";
+import {
+  activeAjoGroup,
+  ajoMembers,
+  calculatePayoutAmount,
+  contributionCycles,
+  contributionRecords,
+  getCycleContributionSummary,
+  payoutSchedule,
+} from "../_data/mockData";
+import EmptyState from "../_ui/EmptyState";
+import StatusBadge from "../_ui/StatusBadge";
+import { formatDate, formatNaira } from "../_ui/formatters";
 
 export default function DashboardOverview() {
+  const cycle = contributionCycles.find(
+    (item) => item.id === activeAjoGroup.currentCycleId,
+  );
+  const cycleSummary = getCycleContributionSummary(
+    activeAjoGroup.currentCycleId,
+  );
+  const activeMembers = ajoMembers.filter(
+    (member) => member.groupId === activeAjoGroup.id && member.isActive,
+  );
+  const completedTurns = payoutSchedule.filter(
+    (payout) =>
+      payout.groupId === activeAjoGroup.id && payout.status === "completed",
+  ).length;
+  const upcomingPayout = payoutSchedule.find(
+    (payout) =>
+      payout.groupId === activeAjoGroup.id &&
+      payout.cycleId === activeAjoGroup.currentCycleId &&
+      payout.status === "upcoming",
+  );
+  const payoutRecipient = ajoMembers.find(
+    (member) => member.id === upcomingPayout?.recipientMemberId,
+  );
+  const currentContributions = contributionRecords.filter(
+    (record) =>
+      record.groupId === activeAjoGroup.id &&
+      record.cycleId === activeAjoGroup.currentCycleId,
+  );
+  const turnsPercent = activeAjoGroup.memberIds.length
+    ? Math.round((completedTurns / activeAjoGroup.memberIds.length) * 100)
+    : 0;
+
   return (
     <DashboardShell activeItem="Overview">
       <article className="relative isolate mx-auto w-full max-w-6xl overflow-hidden rounded-[1.75rem] bg-primary text-[#f8f4ed] shadow-[0_1.5rem_4rem_rgb(74_48_38_/_16%)]">
@@ -35,7 +79,7 @@ export default function DashboardOverview() {
               <div className="mt-5">
                 <p className="text-xs font-medium text-white/55">Group title</p>
                 <h2 className="mt-1 font-sans text-3xl font-semibold tracking-[-0.04em] text-white sm:text-4xl">
-                  —
+                  {activeAjoGroup.name}
                 </h2>
               </div>
             </div>
@@ -46,7 +90,7 @@ export default function DashboardOverview() {
                 className="size-1.5 rounded-full bg-[#e9ded0]"
               />
               <span>Group status</span>
-              <span className="text-white/55">—</span>
+              <span className="text-white/55">Active</span>
             </div>
           </div>
 
@@ -56,7 +100,7 @@ export default function DashboardOverview() {
                 Contribution amount
               </p>
               <p className="mt-2 font-sans text-2xl font-semibold tracking-tight text-white sm:text-3xl">
-                —
+                {formatNaira(activeAjoGroup.contributionAmount)}
               </p>
             </div>
             <div>
@@ -64,7 +108,8 @@ export default function DashboardOverview() {
                 Frequency
               </p>
               <p className="mt-2 font-sans text-2xl font-semibold tracking-tight text-white sm:text-3xl">
-                —
+                {activeAjoGroup.frequency[0].toUpperCase() +
+                  activeAjoGroup.frequency.slice(1)}
               </p>
             </div>
             <div>
@@ -72,7 +117,7 @@ export default function DashboardOverview() {
                 Total members
               </p>
               <p className="mt-2 font-sans text-2xl font-semibold tracking-tight text-white sm:text-3xl">
-                —
+                {activeMembers.length}
               </p>
             </div>
             <div>
@@ -80,7 +125,7 @@ export default function DashboardOverview() {
                 Current cycle
               </p>
               <p className="mt-2 font-sans text-2xl font-semibold tracking-tight text-white sm:text-3xl">
-                —
+                {cycle?.label ?? activeAjoGroup.currentCycleId}
               </p>
             </div>
           </div>
@@ -88,21 +133,33 @@ export default function DashboardOverview() {
           <div className="mt-7 rounded-2xl border border-white/12 bg-[#38231c]/35 p-4 sm:mt-8 sm:p-5">
             <div className="flex items-center justify-between gap-4">
               <p className="text-sm font-semibold text-white">Cycle progress</p>
-              <span className="text-xs font-medium text-white/65">—</span>
+              <span className="text-xs font-medium text-white/65">
+                {completedTurns} of {activeAjoGroup.memberIds.length} turns
+              </span>
             </div>
             <div
               role="img"
-              aria-label="Cycle progress unavailable"
+              aria-label={`Payout rotation progress: ${completedTurns} of ${activeAjoGroup.memberIds.length} turns completed`}
               className="mt-3 h-2 overflow-hidden rounded-full bg-white/15"
             >
-              <div className="h-full w-0 rounded-full bg-[#e9ded0]" />
+              <div
+                className="h-full rounded-full bg-[#e9ded0]"
+                style={{ width: `${turnsPercent}%` }}
+              />
             </div>
             <div className="mt-4 flex flex-col gap-2 text-xs text-white/65 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
               <p>
-                Completed payout turns: <span className="text-white">—</span>
+                Completed payout turns:{" "}
+                <span className="text-white">{completedTurns}</span>
               </p>
               <p>
-                Remaining payout turns: <span className="text-white">—</span>
+                Remaining payout turns:{" "}
+                <span className="text-white">
+                  {Math.max(
+                    0,
+                    activeAjoGroup.memberIds.length - completedTurns,
+                  )}
+                </span>
               </p>
             </div>
           </div>
@@ -118,10 +175,10 @@ export default function DashboardOverview() {
             </span>
           </div>
           <p
-            aria-label="Value unavailable"
+            aria-label="Paid contributions in the current cycle"
             className="mt-5 text-3xl font-semibold tracking-tight text-text-primary"
           >
-            &mdash;
+            {formatNaira(cycleSummary.paidAmount)}
           </p>
           <p className="mt-1.5 text-xs text-text-secondary sm:text-sm">
             Contributions received
@@ -136,10 +193,10 @@ export default function DashboardOverview() {
             </span>
           </div>
           <p
-            aria-label="Value unavailable"
+            aria-label="Pending contributions in the current cycle"
             className="mt-5 text-3xl font-semibold tracking-tight text-text-primary"
           >
-            &mdash;
+            {formatNaira(cycleSummary.pendingAmount)}
           </p>
           <p className="mt-1.5 text-xs text-text-secondary sm:text-sm">
             Awaiting payment
@@ -154,10 +211,10 @@ export default function DashboardOverview() {
             </span>
           </div>
           <p
-            aria-label="Value unavailable"
+            aria-label="Overdue contributions in the current cycle"
             className="mt-5 text-3xl font-semibold tracking-tight text-text-primary"
           >
-            &mdash;
+            {formatNaira(cycleSummary.overdueAmount)}
           </p>
           <p className="mt-1.5 text-xs text-text-secondary sm:text-sm">
             Payment past due
@@ -190,7 +247,7 @@ export default function DashboardOverview() {
                 Recipient
               </p>
               <p className="mt-0.5 truncate text-sm font-semibold text-text-primary">
-                Not available
+                {payoutRecipient?.fullName ?? "Not scheduled"}
               </p>
             </div>
           </div>
@@ -200,7 +257,7 @@ export default function DashboardOverview() {
               Expected payout amount
             </p>
             <p className="mt-1.5 text-2xl font-semibold tracking-tight text-primary">
-              &mdash;
+              {formatNaira(calculatePayoutAmount())}
             </p>
           </div>
 
@@ -210,7 +267,9 @@ export default function DashboardOverview() {
                 Payout date
               </p>
               <p className="mt-1.5 text-sm font-semibold text-text-primary">
-                &mdash;
+                {upcomingPayout
+                  ? formatDate(upcomingPayout.payoutDate)
+                  : "Not scheduled"}
               </p>
             </div>
             <div>
@@ -218,7 +277,7 @@ export default function DashboardOverview() {
                 Payout turn
               </p>
               <p className="mt-1.5 text-sm font-semibold text-text-primary">
-                &mdash;
+                {upcomingPayout?.turn ?? "—"}
               </p>
             </div>
           </div>
@@ -234,14 +293,13 @@ export default function DashboardOverview() {
                 A snapshot of recent group activity
               </p>
             </div>
-            <button
-              type="button"
-              disabled
-              className="inline-flex items-center gap-1.5 rounded-lg py-1 text-xs font-semibold text-secondary transition-colors disabled:cursor-not-allowed disabled:opacity-75 sm:text-sm"
+            <Link
+              href="/contribution-history"
+              className="inline-flex items-center gap-1.5 rounded-lg py-1 text-xs font-semibold text-secondary transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-focus focus-visible:outline-offset-2 sm:text-sm"
             >
               View history
               <FiArrowRight aria-hidden="true" className="size-4" />
-            </button>
+            </Link>
           </div>
 
           <div className="mt-6 grid grid-cols-[1.1fr_0.8fr_0.8fr_auto] gap-2 border-b border-border px-1 pb-3 text-[0.625rem] font-semibold uppercase tracking-wide text-text-muted sm:gap-4 sm:text-[0.6875rem]">
@@ -251,17 +309,41 @@ export default function DashboardOverview() {
             <span>Status</span>
           </div>
 
-          <div className="flex min-h-44 flex-col items-center justify-center px-4 py-8 text-center">
-            <span className="grid size-11 place-items-center rounded-2xl bg-primary-light/70 text-secondary">
-              <FiInbox aria-hidden="true" className="size-5" />
-            </span>
-            <p className="mt-4 text-sm font-semibold text-primary">
-              No contributions to show yet
-            </p>
-            <p className="mt-1.5 max-w-xs text-xs leading-5 text-text-secondary sm:text-sm">
-              Contribution records will appear soon.
-            </p>
-          </div>
+          {currentContributions.length > 0 ? (
+            <div className="divide-y divide-border">
+              {currentContributions.map((record) => {
+                const member = ajoMembers.find(
+                  (item) => item.id === record.memberId,
+                );
+
+                return (
+                  <div
+                    key={record.id}
+                    className="grid grid-cols-[1.1fr_0.8fr_0.8fr_auto] items-center gap-2 px-1 py-3 text-xs sm:gap-4 sm:text-sm"
+                  >
+                    <span className="truncate font-medium text-text-primary">
+                      {member?.fullName ?? "Member"}
+                    </span>
+                    <span className="text-text-secondary">
+                      {formatNaira(record.amount)}
+                    </span>
+                    <span className="text-text-secondary">
+                      {formatDate(record.paidAt ?? record.dueDate)}
+                    </span>
+                    <StatusBadge status={record.status} />
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="px-4 py-8 text-center">
+              <EmptyState
+                icon={FiInbox}
+                title="No contributions to show yet"
+                description="Contribution records will appear here once available."
+              />
+            </div>
+          )}
         </article>
       </div>
     </DashboardShell>
