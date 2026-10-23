@@ -152,13 +152,13 @@ export default function DashboardOverview() {
             </div>
             <div className="mt-4 flex flex-col gap-2 text-xs text-white/65 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
               <p>
-                Received: {" "}
+                Received:{" "}
                 <span className="text-white">
                   {formatNaira(cycleSummary.paidAmount)}
                 </span>
               </p>
               <p>
-                Outstanding: {" "}
+                Outstanding:{" "}
                 <span className="text-white">
                   {formatNaira(cycleSummary.outstandingAmount)}
                 </span>
