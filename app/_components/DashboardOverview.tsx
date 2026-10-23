@@ -32,10 +32,6 @@ export default function DashboardOverview() {
   const activeMembers = ajoMembers.filter(
     (member) => member.groupId === activeAjoGroup.id && member.isActive,
   );
-  const completedTurns = payoutSchedule.filter(
-    (payout) =>
-      payout.groupId === activeAjoGroup.id && payout.status === "completed",
-  ).length;
   const upcomingPayout = payoutSchedule.find(
     (payout) =>
       payout.groupId === activeAjoGroup.id &&
@@ -50,8 +46,13 @@ export default function DashboardOverview() {
       record.groupId === activeAjoGroup.id &&
       record.cycleId === activeAjoGroup.currentCycleId,
   );
-  const turnsPercent = activeAjoGroup.memberIds.length
-    ? Math.round((completedTurns / activeAjoGroup.memberIds.length) * 100)
+  const contributionProgressPercent = cycleSummary.expectedAmount
+    ? Math.min(
+        100,
+        Math.round(
+          (cycleSummary.paidAmount / cycleSummary.expectedAmount) * 100,
+        ),
+      )
     : 0;
 
   return (
@@ -132,33 +133,34 @@ export default function DashboardOverview() {
 
           <div className="mt-7 rounded-2xl border border-white/12 bg-[#38231c]/35 p-4 sm:mt-8 sm:p-5">
             <div className="flex items-center justify-between gap-4">
-              <p className="text-sm font-semibold text-white">Cycle progress</p>
+              <p className="text-sm font-semibold text-white">
+                Contribution progress
+              </p>
               <span className="text-xs font-medium text-white/65">
-                {completedTurns} of {activeAjoGroup.memberIds.length} turns
+                {contributionProgressPercent}% received
               </span>
             </div>
             <div
               role="img"
-              aria-label={`Payout rotation progress: ${completedTurns} of ${activeAjoGroup.memberIds.length} turns completed`}
+              aria-label={`Contribution progress: ${formatNaira(cycleSummary.paidAmount)} of ${formatNaira(cycleSummary.expectedAmount)} received`}
               className="mt-3 h-2 overflow-hidden rounded-full bg-white/15"
             >
               <div
                 className="h-full rounded-full bg-[#e9ded0]"
-                style={{ width: `${turnsPercent}%` }}
+                style={{ width: `${contributionProgressPercent}%` }}
               />
             </div>
             <div className="mt-4 flex flex-col gap-2 text-xs text-white/65 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
               <p>
-                Completed payout turns:{" "}
-                <span className="text-white">{completedTurns}</span>
+                Received: {" "}
+                <span className="text-white">
+                  {formatNaira(cycleSummary.paidAmount)}
+                </span>
               </p>
               <p>
-                Remaining payout turns:{" "}
+                Outstanding: {" "}
                 <span className="text-white">
-                  {Math.max(
-                    0,
-                    activeAjoGroup.memberIds.length - completedTurns,
-                  )}
+                  {formatNaira(cycleSummary.outstandingAmount)}
                 </span>
               </p>
             </div>
@@ -277,7 +279,7 @@ export default function DashboardOverview() {
                 Payout turn
               </p>
               <p className="mt-1.5 text-sm font-semibold text-text-primary">
-                {upcomingPayout?.turn ?? "—"}
+                {upcomingPayout?.turn ?? "Not scheduled"}
               </p>
             </div>
           </div>
