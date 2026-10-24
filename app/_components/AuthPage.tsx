@@ -128,7 +128,7 @@ export default function AuthPage({ mode }: AuthPageProps) {
                       disabled
                       title="Password reset"
                       aria-label="Forgot password?"
-                      className="text-xs font-semibold text-secondary/70 underline decoration-secondary/30 underline-offset-4 cursor-pointer"
+                      className="text-xs font-semibold text-secondary/70 underline decoration-secondary/30 underline-offset-4 cursor-not-allowed"
                     >
                       Forgot password?
                     </button>
@@ -148,7 +148,7 @@ export default function AuthPage({ mode }: AuthPageProps) {
               )}
               <button
                 type="submit"
-                className="flex h-[3.25rem] w-full items-center justify-center rounded-xl bg-button-primary px-5 text-sm font-bold text-button-primary-text shadow-[0_0.5rem_1.125rem_rgb(74_48_38_/_14%)] transition-colors hover:bg-button-primary-hover focus-visible:outline-3 focus-visible:outline-focus focus-visible:outline-offset-3 active:translate-y-px"
+                className="flex h-[3.25rem] w-full cursor-pointer items-center justify-center rounded-xl bg-button-primary px-5 text-sm font-bold text-button-primary-text shadow-[0_0.5rem_1.125rem_rgb(74_48_38_/_14%)] transition-colors hover:bg-button-primary-hover focus-visible:outline-3 focus-visible:outline-focus focus-visible:outline-offset-3 active:translate-y-px"
               >
                 {signup ? "Create account" : "Sign in"}
               </button>

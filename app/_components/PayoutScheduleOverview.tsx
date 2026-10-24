@@ -195,7 +195,7 @@ export default function PayoutScheduleOverview() {
                   onChange={(event) =>
                     setStatusFilter(event.target.value as StatusFilter)
                   }
-                  className="h-10 rounded-lg border border-border bg-white px-3 text-sm text-text-primary outline-none focus:border-secondary focus:ring-2 focus:ring-focus/20 sm:min-w-36"
+                  className="h-10 cursor-pointer rounded-lg border border-border bg-white px-3 text-sm text-text-primary outline-none focus:border-secondary focus:ring-2 focus:ring-focus/20 sm:min-w-36"
                 >
                   <option value="all">All statuses</option>
                   <option value="completed">Completed</option>
@@ -208,7 +208,7 @@ export default function PayoutScheduleOverview() {
                   aria-label="Filter payouts by cycle"
                   value={cycleFilter}
                   onChange={(event) => setCycleFilter(event.target.value)}
-                  className="h-10 rounded-lg border border-border bg-white px-3 text-sm text-text-primary outline-none focus:border-secondary focus:ring-2 focus:ring-focus/20 sm:min-w-40"
+                  className="h-10 cursor-pointer rounded-lg border border-border bg-white px-3 text-sm text-text-primary outline-none focus:border-secondary focus:ring-2 focus:ring-focus/20 sm:min-w-40"
                 >
                   <option value="all">All cycles</option>
                   {availableCycles.map((cycle) => (
@@ -232,7 +232,7 @@ export default function PayoutScheduleOverview() {
                 <button
                   type="button"
                   onClick={clearFilters}
-                  className="mt-5 rounded-lg px-3 py-2 text-sm font-semibold text-primary underline decoration-primary/30 underline-offset-4 hover:text-primary-hover focus-visible:outline-2 focus-visible:outline-focus focus-visible:outline-offset-2"
+                  className="mt-5 cursor-pointer rounded-lg px-3 py-2 text-sm font-semibold text-primary underline decoration-primary/30 underline-offset-4 hover:text-primary-hover focus-visible:outline-2 focus-visible:outline-focus focus-visible:outline-offset-2"
                 >
                   Clear filters
                 </button>

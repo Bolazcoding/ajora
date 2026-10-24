@@ -84,7 +84,7 @@ export default function DashboardShell({
           type="button"
           aria-label="Close navigation"
           onClick={() => setIsMobileNavOpen(false)}
-          className="fixed inset-0 z-40 bg-primary/30 backdrop-blur-[2px] md:hidden"
+          className="fixed inset-0 z-40 cursor-pointer bg-primary/30 backdrop-blur-[2px] md:hidden"
         />
       )}
 
@@ -112,7 +112,7 @@ export default function DashboardShell({
             type="button"
             aria-label="Close navigation"
             onClick={() => setIsMobileNavOpen(false)}
-            className="grid size-10 place-items-center rounded-full border border-border bg-surface text-primary md:hidden"
+            className="grid size-10 cursor-pointer place-items-center rounded-full border border-border bg-surface text-primary md:hidden"
           >
             <FiX aria-hidden="true" className="size-5" />
           </button>
@@ -130,7 +130,7 @@ export default function DashboardShell({
                 href={href}
                 aria-current={active ? "page" : undefined}
                 onClick={() => setIsMobileNavOpen(false)}
-                className={`group flex min-h-11 w-full items-center justify-start gap-3 rounded-xl px-3 text-left text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-focus focus-visible:outline-offset-2 ${active ? "bg-primary-light text-primary" : "text-text-secondary hover:bg-primary-light/65 hover:text-primary"}`}
+                className={`group flex min-h-11 w-full cursor-pointer items-center justify-start gap-3 rounded-xl px-3 text-left text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-focus focus-visible:outline-offset-2 ${active ? "bg-primary-light text-primary" : "text-text-secondary hover:bg-primary-light/65 hover:text-primary"}`}
               >
                 <Icon
                   aria-hidden="true"
@@ -172,7 +172,7 @@ export default function DashboardShell({
               aria-controls="dashboard-navigation"
               aria-expanded={isDesktopSidebarOpen}
               onClick={() => setIsDesktopSidebarOpen((open) => !open)}
-              className="hidden size-10 place-items-center rounded-full border border-border bg-surface text-primary transition-colors hover:bg-primary-light/50 focus-visible:outline-2 focus-visible:outline-focus focus-visible:outline-offset-2 md:grid"
+              className="hidden size-10 cursor-pointer place-items-center rounded-full border border-border bg-surface text-primary transition-colors hover:bg-primary-light/50 focus-visible:outline-2 focus-visible:outline-focus focus-visible:outline-offset-2 md:grid"
             >
               <FiMenu aria-hidden="true" className="size-5" />
             </button>
@@ -194,14 +194,14 @@ export default function DashboardShell({
               <button
                 type="button"
                 aria-label="Notifications"
-                className="grid size-10 place-items-center rounded-full border border-border bg-surface text-secondary transition-colors hover:bg-primary-light/50 focus-visible:outline-2 focus-visible:outline-focus focus-visible:outline-offset-2"
+                className="grid size-10 cursor-pointer place-items-center rounded-full border border-border bg-surface text-secondary transition-colors hover:bg-primary-light/50 focus-visible:outline-2 focus-visible:outline-focus focus-visible:outline-offset-2"
               >
                 <FiBell aria-hidden="true" className="size-5" />
               </button>
               <button
                 type="button"
                 aria-label="Profile menu"
-                className="flex items-center gap-2 rounded-full sm:pl-1"
+                className="flex cursor-pointer items-center gap-2 rounded-full sm:pl-1"
               >
                 <ProfileAvatar className="size-9 text-xs sm:size-10 sm:text-sm" />
                 <span className="hidden text-sm font-semibold text-primary lg:inline">
@@ -219,7 +219,7 @@ export default function DashboardShell({
                 aria-controls="dashboard-navigation"
                 aria-expanded={isMobileNavOpen}
                 onClick={() => setIsMobileNavOpen(true)}
-                className="grid size-10 place-items-center rounded-full border border-border bg-surface text-primary transition-colors hover:bg-primary-light/50 focus-visible:outline-2 focus-visible:outline-focus focus-visible:outline-offset-2 md:hidden"
+                className="grid size-10 cursor-pointer place-items-center rounded-full border border-border bg-surface text-primary transition-colors hover:bg-primary-light/50 focus-visible:outline-2 focus-visible:outline-focus focus-visible:outline-offset-2 md:hidden"
               >
                 <FiMenu aria-hidden="true" className="size-5" />
               </button>

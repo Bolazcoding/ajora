@@ -170,7 +170,7 @@ export default function RecordContributionDialog({
             type="button"
             onClick={onClose}
             aria-label="Close record contribution dialog"
-            className="grid size-9 shrink-0 place-items-center rounded-lg text-text-secondary hover:bg-primary-light hover:text-primary focus-visible:outline-2 focus-visible:outline-focus focus-visible:outline-offset-2"
+            className="grid size-9 shrink-0 cursor-pointer place-items-center rounded-lg text-text-secondary hover:bg-primary-light hover:text-primary focus-visible:outline-2 focus-visible:outline-focus focus-visible:outline-offset-2"
           >
             <FiX aria-hidden="true" className="size-5" />
           </button>
@@ -195,7 +195,7 @@ export default function RecordContributionDialog({
             <button
               type="button"
               onClick={onClose}
-              className="mt-6 min-h-11 rounded-xl bg-primary px-5 text-sm font-semibold text-white transition-colors hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-focus focus-visible:outline-offset-2"
+              className="mt-6 min-h-11 cursor-pointer rounded-xl bg-primary px-5 text-sm font-semibold text-white transition-colors hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-focus focus-visible:outline-offset-2"
             >
               Done
             </button>
@@ -216,7 +216,7 @@ export default function RecordContributionDialog({
                   aria-describedby={
                     errors.member ? "contribution-member-error" : undefined
                   }
-                  className={fieldClass(Boolean(errors.member))}
+                  className={`${fieldClass(Boolean(errors.member))} cursor-pointer`}
                 >
                   <option value="">Select a member</option>
                   {activeMembers.map((member) => (
@@ -260,7 +260,7 @@ export default function RecordContributionDialog({
                     }));
                   }}
                   aria-invalid={Boolean(errors.cycle)}
-                  className={fieldClass(Boolean(errors.cycle))}
+                  className={`${fieldClass(Boolean(errors.cycle))} cursor-pointer`}
                 >
                   {availableCycles.map((cycle) => (
                     <option key={cycle.id} value={cycle.id}>
@@ -342,13 +342,13 @@ export default function RecordContributionDialog({
               <button
                 type="button"
                 onClick={onClose}
-                className="min-h-11 rounded-xl border border-border bg-white px-5 text-sm font-semibold text-text-secondary transition-colors hover:bg-surface focus-visible:outline-2 focus-visible:outline-focus focus-visible:outline-offset-2"
+                className="min-h-11 cursor-pointer rounded-xl border border-border bg-white px-5 text-sm font-semibold text-text-secondary transition-colors hover:bg-surface focus-visible:outline-2 focus-visible:outline-focus focus-visible:outline-offset-2"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="min-h-11 rounded-xl bg-primary px-5 text-sm font-semibold text-white transition-colors hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-focus focus-visible:outline-offset-2"
+                className="min-h-11 cursor-pointer rounded-xl bg-primary px-5 text-sm font-semibold text-white transition-colors hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-focus focus-visible:outline-offset-2"
               >
                 Record demo contribution
               </button>

@@ -215,7 +215,7 @@ export default function ContributionHistoryOverview() {
                     setStatusFilter(event.target.value as StatusFilter)
                   }
                   aria-label="Filter by contribution status"
-                  className="h-11 w-full rounded-xl border border-border bg-white px-3 text-sm font-medium text-text-primary outline-none focus:border-secondary focus:ring-2 focus:ring-focus/20"
+                  className="h-11 w-full cursor-pointer rounded-xl border border-border bg-white px-3 text-sm font-medium text-text-primary outline-none focus:border-secondary focus:ring-2 focus:ring-focus/20"
                 >
                   {statusFilters.map((filter) => (
                     <option key={filter.value} value={filter.value}>
@@ -233,7 +233,7 @@ export default function ContributionHistoryOverview() {
                   value={cycleFilter}
                   onChange={(event) => setCycleFilter(event.target.value)}
                   aria-label="Filter by payment period"
-                  className="h-11 w-full rounded-xl border border-border bg-white px-3 text-sm font-medium text-text-primary outline-none focus:border-secondary focus:ring-2 focus:ring-focus/20"
+                  className="h-11 w-full cursor-pointer rounded-xl border border-border bg-white px-3 text-sm font-medium text-text-primary outline-none focus:border-secondary focus:ring-2 focus:ring-focus/20"
                 >
                   <option value="all">All periods</option>
                   {availableCycles.map((cycle) => (
@@ -260,7 +260,7 @@ export default function ContributionHistoryOverview() {
                 <button
                   type="button"
                   onClick={clearFilters}
-                  className="mt-5 rounded-lg px-3 py-2 text-sm font-semibold text-primary underline decoration-primary/30 underline-offset-4 hover:text-primary-hover focus-visible:outline-2 focus-visible:outline-focus focus-visible:outline-offset-2"
+                  className="mt-5 cursor-pointer rounded-lg px-3 py-2 text-sm font-semibold text-primary underline decoration-primary/30 underline-offset-4 hover:text-primary-hover focus-visible:outline-2 focus-visible:outline-focus focus-visible:outline-offset-2"
                 >
                   Clear filters
                 </button>
