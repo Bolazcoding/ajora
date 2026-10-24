@@ -11,14 +11,8 @@ import {
   FiInbox,
   FiUser,
 } from "react-icons/fi";
-import {
-  activeAjoGroup,
-  ajoMembers,
-  calculatePayoutAmount,
-  contributionCycles,
-  getCycleContributionSummary,
-  payoutSchedule,
-} from "../_data/mockData";
+import { activeAjoGroup } from "../_data/mockData";
+import { getDashboardOverviewData } from "../_lib/calculations/dashboard";
 import EmptyState from "../_ui/EmptyState";
 import StatusBadge from "../_ui/StatusBadge";
 import { formatDate, formatNaira } from "../_ui/formatters";
@@ -26,40 +20,17 @@ import { useContributionDemo } from "../_state/ContributionDemoProvider";
 
 export default function DashboardOverview() {
   const { contributionRecords } = useContributionDemo();
-  const cycle = contributionCycles.find(
-    (item) => item.id === activeAjoGroup.currentCycleId,
-  );
-  const cycleSummary = getCycleContributionSummary(
-    activeAjoGroup.currentCycleId,
-    activeAjoGroup,
-    ajoMembers,
-    contributionRecords,
-  );
-  const activeMembers = ajoMembers.filter(
-    (member) => member.groupId === activeAjoGroup.id && member.isActive,
-  );
-  const upcomingPayout = payoutSchedule.find(
-    (payout) =>
-      payout.groupId === activeAjoGroup.id &&
-      payout.cycleId === activeAjoGroup.currentCycleId &&
-      payout.status === "upcoming",
-  );
-  const payoutRecipient = ajoMembers.find(
-    (member) => member.id === upcomingPayout?.recipientMemberId,
-  );
-  const currentContributions = contributionRecords.filter(
-    (record) =>
-      record.groupId === activeAjoGroup.id &&
-      record.cycleId === activeAjoGroup.currentCycleId,
-  );
-  const contributionProgressPercent = cycleSummary.expectedAmount
-    ? Math.min(
-        100,
-        Math.round(
-          (cycleSummary.paidAmount / cycleSummary.expectedAmount) * 100,
-        ),
-      )
-    : 0;
+  const {
+    activeMembers,
+    contributionProgressPercent,
+    cycle,
+    cycleSummary,
+    frequencyLabel,
+    payoutAmount,
+    payoutRecipient,
+    recentContributions,
+    upcomingPayout,
+  } = getDashboardOverviewData(contributionRecords);
 
   return (
     <DashboardShell activeItem="Overview">
@@ -115,8 +86,7 @@ export default function DashboardOverview() {
                 Frequency
               </p>
               <p className="mt-2 font-sans text-2xl font-semibold tracking-tight text-white sm:text-3xl">
-                {activeAjoGroup.frequency[0].toUpperCase() +
-                  activeAjoGroup.frequency.slice(1)}
+                {frequencyLabel}
               </p>
             </div>
             <div>
@@ -265,7 +235,7 @@ export default function DashboardOverview() {
               Expected payout amount
             </p>
             <p className="mt-1.5 text-2xl font-semibold tracking-tight text-primary">
-              {formatNaira(calculatePayoutAmount())}
+              {formatNaira(payoutAmount)}
             </p>
           </div>
 
@@ -317,31 +287,25 @@ export default function DashboardOverview() {
             <span>Status</span>
           </div>
 
-          {currentContributions.length > 0 ? (
+          {recentContributions.length > 0 ? (
             <div className="divide-y divide-border">
-              {currentContributions.map((record) => {
-                const member = ajoMembers.find(
-                  (item) => item.id === record.memberId,
-                );
-
-                return (
-                  <div
-                    key={record.id}
-                    className="grid grid-cols-[1.1fr_0.8fr_0.8fr_auto] items-center gap-2 px-1 py-3 text-xs sm:gap-4 sm:text-sm"
-                  >
-                    <span className="truncate font-medium text-text-primary">
-                      {member?.fullName ?? "Member"}
-                    </span>
-                    <span className="text-text-secondary">
-                      {formatNaira(record.amount)}
-                    </span>
-                    <span className="text-text-secondary">
-                      {formatDate(record.paidAt ?? record.dueDate)}
-                    </span>
-                    <StatusBadge status={record.status} />
-                  </div>
-                );
-              })}
+              {recentContributions.map(({ record, member }) => (
+                <div
+                  key={record.id}
+                  className="grid grid-cols-[1.1fr_0.8fr_0.8fr_auto] items-center gap-2 px-1 py-3 text-xs sm:gap-4 sm:text-sm"
+                >
+                  <span className="truncate font-medium text-text-primary">
+                    {member?.fullName ?? "Member"}
+                  </span>
+                  <span className="text-text-secondary">
+                    {formatNaira(record.amount)}
+                  </span>
+                  <span className="text-text-secondary">
+                    {formatDate(record.paidAt ?? record.dueDate)}
+                  </span>
+                  <StatusBadge status={record.status} />
+                </div>
+              ))}
             </div>
           ) : (
             <div className="px-4 py-8 text-center">

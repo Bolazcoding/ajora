@@ -6,24 +6,13 @@ import RecordContributionDialog from "./RecordContributionDialog";
 import { FiSearch, FiUsers } from "react-icons/fi";
 import EmptyState from "../_ui/EmptyState";
 import StatusBadge from "../_ui/StatusBadge";
+import type { MemberContributionStatus } from "../_data/mockData";
 import {
-  activeAjoGroup,
-  ajoMembers,
-  type MemberContributionStatus,
-} from "../_data/mockData";
+  getMemberOverviewData,
+  type MemberOverviewStatusFilter,
+} from "../_lib/calculations/members";
 import { useContributionDemo } from "../_state/ContributionDemoProvider";
 import { formatDate, formatNaira } from "../_ui/formatters";
-
-type MemberRow = {
-  id: string;
-  fullName: string;
-  amountDue: number;
-  amountPaid: number;
-  outstanding: number;
-  status: MemberContributionStatus;
-  dueDate: string | null;
-  payoutOrder: number;
-};
 
 const statusFilters = [
   { value: "all", label: "All Members" },
@@ -31,7 +20,7 @@ const statusFilters = [
   { value: "pending", label: "Pending" },
   { value: "overdue", label: "Overdue" },
 ] as const;
-type StatusFilter = (typeof statusFilters)[number]["value"];
+type StatusFilter = MemberOverviewStatusFilter;
 
 function MemberStatus({ status }: { status: MemberContributionStatus }) {
   if (status === "unrecorded") {
@@ -50,46 +39,11 @@ export default function MembersOverview() {
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [isRecording, setIsRecording] = useState(false);
   const { contributionRecords } = useContributionDemo();
-
-  const memberRows: MemberRow[] = ajoMembers
-    .filter(
-      (member) =>
-        member.groupId === activeAjoGroup.id &&
-        member.isActive &&
-        activeAjoGroup.memberIds.includes(member.id),
-    )
-    .map((member) => {
-      const contribution = contributionRecords.find(
-        (record) =>
-          record.groupId === activeAjoGroup.id &&
-          record.cycleId === activeAjoGroup.currentCycleId &&
-          record.memberId === member.id,
-      );
-      const amountDue = activeAjoGroup.contributionAmount;
-      const amountPaid =
-        contribution?.status === "paid" ? contribution.amount : 0;
-
-      return {
-        id: member.id,
-        fullName: member.fullName,
-        amountDue,
-        amountPaid,
-        outstanding: Math.max(0, amountDue - amountPaid),
-        status: contribution?.status ?? "unrecorded",
-        dueDate: contribution?.dueDate ?? null,
-        payoutOrder: member.payoutOrder,
-      };
-    });
-
-  const query = search.trim().toLocaleLowerCase();
-  const filteredMembers = memberRows.filter((member) => {
-    const matchesSearch = member.fullName.toLocaleLowerCase().includes(query);
-    const matchesStatus =
-      statusFilter === "all" || member.status === statusFilter;
-
-    return matchesSearch && matchesStatus;
-  });
-  const hasFilters = search.length > 0 || statusFilter !== "all";
+  const { filteredMembers, hasFilters } = getMemberOverviewData(
+    contributionRecords,
+    search,
+    statusFilter,
+  );
 
   function clearFilters() {
     setSearch("");
