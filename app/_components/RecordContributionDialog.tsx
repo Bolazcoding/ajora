@@ -7,6 +7,14 @@ import {
   ajoMembers,
   contributionCycles,
 } from "../_data/mockData";
+import {
+  getActiveContributionMembers,
+  getAvailableContributionCycles,
+  getContributionCycleDateRange,
+  hasPaidContributionRecord,
+  validateRecordContributionForm,
+  type RecordContributionFormErrors,
+} from "../_lib/calculations/record-contribution";
 import { useContributionDemo } from "../_state/ContributionDemoProvider";
 import { formatNaira } from "../_ui/formatters";
 
@@ -14,17 +22,13 @@ type RecordContributionDialogProps = {
   onClose: () => void;
 };
 
-type FormErrors = Partial<
-  Record<"member" | "cycle" | "amount" | "date", string>
->;
-
 export default function RecordContributionDialog({
   onClose,
 }: RecordContributionDialogProps) {
   const { contributionRecords, recordContribution } = useContributionDemo();
-  const availableCycles = contributionCycles.filter(
-    (cycle) =>
-      cycle.groupId === activeAjoGroup.id && cycle.status !== "completed",
+  const availableCycles = getAvailableContributionCycles(
+    contributionCycles,
+    activeAjoGroup,
   );
   const [memberId, setMemberId] = useState("");
   const [cycleId, setCycleId] = useState(activeAjoGroup.currentCycleId);
@@ -36,16 +40,13 @@ export default function RecordContributionDialog({
       (cycle) => cycle.id === activeAjoGroup.currentCycleId,
     )?.contributionDueDate ?? "",
   );
-  const [errors, setErrors] = useState<FormErrors>({});
+  const [errors, setErrors] = useState<RecordContributionFormErrors>({});
   const [success, setSuccess] = useState<{
     message: string;
     amount: number;
   } | null>(null);
   const selectedCycle = availableCycles.find((cycle) => cycle.id === cycleId);
-  const [cycleYear, cycleMonth] = cycleId.split("-").map(Number);
-  const cycleLastDate = new Date(Date.UTC(cycleYear, cycleMonth, 0))
-    .toISOString()
-    .slice(0, 10);
+  const cycleDateRange = getContributionCycleDateRange(cycleId);
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
@@ -56,55 +57,28 @@ export default function RecordContributionDialog({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [onClose]);
 
-  const activeMembers = ajoMembers.filter(
-    (member) =>
-      member.groupId === activeAjoGroup.id &&
-      member.isActive &&
-      activeAjoGroup.memberIds.includes(member.id),
+  const activeMembers = getActiveContributionMembers(
+    ajoMembers,
+    activeAjoGroup,
   );
-
-  function hasPaidRecord(candidateMemberId: string) {
-    return contributionRecords.some(
-      (record) =>
-        record.groupId === activeAjoGroup.id &&
-        record.memberId === candidateMemberId &&
-        record.cycleId === cycleId &&
-        record.status === "paid",
-    );
-  }
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const nextErrors: FormErrors = {};
-    const parsedAmount = Number(amount);
-
-    if (!memberId) nextErrors.member = "Choose a group member.";
-    if (!cycleId || !selectedCycle) {
-      nextErrors.cycle = "Choose a contribution period.";
-    }
-    if (
-      !amount.trim() ||
-      !Number.isSafeInteger(parsedAmount) ||
-      parsedAmount <= 0
-    ) {
-      nextErrors.amount = "Enter a valid whole-naira contribution amount.";
-    } else if (parsedAmount !== activeAjoGroup.contributionAmount) {
-      nextErrors.amount = `The contribution for this group is ${formatNaira(activeAjoGroup.contributionAmount)}.`;
-    }
-    const parsedPaidAt = paidAt ? new Date(`${paidAt}T00:00:00.000Z`) : null;
-    const isValidPaidAt =
-      parsedPaidAt !== null &&
-      !Number.isNaN(parsedPaidAt.getTime()) &&
-      parsedPaidAt.toISOString().slice(0, 10) === paidAt;
-    if (!paidAt || !isValidPaidAt) {
-      nextErrors.date = "Choose the date the contribution was recorded.";
-    } else if (!selectedCycle || !paidAt.startsWith(`${selectedCycle.id}-`)) {
-      nextErrors.date =
-        "Choose a date within the selected contribution period.";
-    }
-    if (memberId && hasPaidRecord(memberId)) {
-      nextErrors.member = "This member is already paid for that period.";
-    }
+    const { errors: nextErrors, parsedAmount } = validateRecordContributionForm(
+      {
+        memberId,
+        cycleId,
+        amount,
+        paidAt,
+        selectedCycle,
+        contributionAmount: activeAjoGroup.contributionAmount,
+        formattedContributionAmount: formatNaira(
+          activeAjoGroup.contributionAmount,
+        ),
+        groupId: activeAjoGroup.id,
+        contributionRecords,
+      },
+    );
 
     if (Object.keys(nextErrors).length > 0) {
       setErrors(nextErrors);
@@ -223,10 +197,22 @@ export default function RecordContributionDialog({
                     <option
                       key={member.id}
                       value={member.id}
-                      disabled={hasPaidRecord(member.id)}
+                      disabled={hasPaidContributionRecord(
+                        contributionRecords,
+                        activeAjoGroup.id,
+                        member.id,
+                        cycleId,
+                      )}
                     >
                       {member.fullName}
-                      {hasPaidRecord(member.id) ? " — already paid" : ""}
+                      {hasPaidContributionRecord(
+                        contributionRecords,
+                        activeAjoGroup.id,
+                        member.id,
+                        cycleId,
+                      )
+                        ? " — already paid"
+                        : ""}
                     </option>
                   ))}
                 </select>
@@ -310,8 +296,8 @@ export default function RecordContributionDialog({
                 <input
                   type="date"
                   value={paidAt}
-                  min={`${cycleId}-01`}
-                  max={cycleLastDate}
+                  min={cycleDateRange.min}
+                  max={cycleDateRange.max}
                   onChange={(event) => {
                     setPaidAt(event.target.value);
                     setErrors((current) => ({ ...current, date: undefined }));

@@ -5,52 +5,28 @@ import DashboardShell from "./DashboardShell";
 import { FiCalendar, FiClock, FiRepeat, FiUser } from "react-icons/fi";
 import EmptyState from "../_ui/EmptyState";
 import StatusBadge from "../_ui/StatusBadge";
+import { activeAjoGroup } from "../_data/mockData";
 import {
-  activeAjoGroup,
-  ajoMembers,
-  calculatePayoutAmount,
-  contributionCycles,
-  payoutSchedule,
-  type PayoutStatus,
-} from "../_data/mockData";
+  getPayoutScheduleData,
+  type PayoutScheduleStatusFilter,
+} from "../_lib/calculations/payouts";
 import { formatDate, formatNaira } from "../_ui/formatters";
 
-type StatusFilter = "all" | PayoutStatus;
+type StatusFilter = PayoutScheduleStatusFilter;
 
 export default function PayoutScheduleOverview() {
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [cycleFilter, setCycleFilter] = useState("all");
 
-  const groupPayouts = payoutSchedule
-    .filter((payout) => payout.groupId === activeAjoGroup.id)
-    .slice()
-    .sort((a, b) => a.turn - b.turn);
-  const scheduledCycleIds = new Set(groupPayouts.map((payout) => payout.cycleId));
-  const availableCycles = contributionCycles.filter(
-    (cycle) =>
-      cycle.groupId === activeAjoGroup.id && scheduledCycleIds.has(cycle.id),
-  );
-  const nextPayout = groupPayouts
-    .filter((payout) => payout.status === "upcoming")
-    .slice()
-    .sort(
-      (a, b) =>
-        a.payoutDate.localeCompare(b.payoutDate) || a.turn - b.turn,
-    )[0];
-  const nextRecipient = ajoMembers.find(
-    (member) => member.id === nextPayout?.recipientMemberId,
-  );
-  const nextCycle = contributionCycles.find(
-    (cycle) => cycle.id === nextPayout?.cycleId,
-  );
-  const expectedPayoutAmount = calculatePayoutAmount();
-
-  const visiblePayouts = groupPayouts.filter(
-    (payout) =>
-      (statusFilter === "all" || payout.status === statusFilter) &&
-      (cycleFilter === "all" || payout.cycleId === cycleFilter),
-  );
-  const hasFilters = statusFilter !== "all" || cycleFilter !== "all";
+  const {
+    availableCycles,
+    expectedPayoutAmount,
+    hasFilters,
+    nextCycle,
+    nextPayout,
+    nextRecipient,
+    visiblePayouts,
+  } = getPayoutScheduleData(statusFilter, cycleFilter);
 
   function clearFilters() {
     setStatusFilter("all");
@@ -253,16 +229,8 @@ export default function PayoutScheduleOverview() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border">
-                    {visiblePayouts.map((payout) => {
-                      const recipient = ajoMembers.find(
-                        (member) => member.id === payout.recipientMemberId,
-                      );
-                      const cycle = contributionCycles.find(
-                        (item) => item.id === payout.cycleId,
-                      );
-                      const isNext = payout.id === nextPayout?.id;
-
-                      return (
+                    {visiblePayouts.map(
+                      ({ payout, recipient, cycle, isNext }) => (
                         <tr
                           key={payout.id}
                           className={isNext ? "bg-primary-light/40" : ""}
@@ -293,23 +261,15 @@ export default function PayoutScheduleOverview() {
                             <StatusBadge status={payout.status} />
                           </td>
                         </tr>
-                      );
-                    })}
+                      ),
+                    )}
                   </tbody>
                 </table>
               </div>
 
               <ol className="divide-y divide-border md:hidden">
-                {visiblePayouts.map((payout) => {
-                  const recipient = ajoMembers.find(
-                    (member) => member.id === payout.recipientMemberId,
-                  );
-                  const cycle = contributionCycles.find(
-                    (item) => item.id === payout.cycleId,
-                  );
-                  const isNext = payout.id === nextPayout?.id;
-
-                  return (
+                {visiblePayouts.map(
+                  ({ payout, recipient, cycle, isNext }) => (
                     <li
                       key={payout.id}
                       className={`p-4 sm:p-5 ${isNext ? "bg-primary-light/40" : ""}`}
@@ -351,8 +311,8 @@ export default function PayoutScheduleOverview() {
                         </div>
                       </dl>
                     </li>
-                  );
-                })}
+                  ),
+                )}
               </ol>
             </>
           )}

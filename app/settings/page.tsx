@@ -15,7 +15,7 @@ export default function SettingsPage() {
         <section className="mt-7 rounded-2xl border border-border bg-white px-5 py-14 text-center shadow-card sm:mt-8">
           <EmptyState
             icon={FiSettings}
-            title="Settings are not available yet"
+            title="Settings page not available yet"
             description="Your group details and contribution schedule are available from the dashboard overview."
           />
         </section>

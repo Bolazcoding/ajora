@@ -5,16 +5,15 @@ import DashboardShell from "./DashboardShell";
 import { FiCalendar, FiClock, FiSearch } from "react-icons/fi";
 import EmptyState from "../_ui/EmptyState";
 import StatusBadge from "../_ui/StatusBadge";
+import { activeAjoGroup } from "../_data/mockData";
 import {
-  activeAjoGroup,
-  ajoMembers,
-  contributionCycles,
-  type PaymentStatus,
-} from "../_data/mockData";
+  getContributionHistoryData,
+  type ContributionHistoryStatusFilter,
+} from "../_lib/calculations/contributions";
 import { formatDate, formatNaira } from "../_ui/formatters";
 import { useContributionDemo } from "../_state/ContributionDemoProvider";
 
-type StatusFilter = "all" | PaymentStatus;
+type StatusFilter = ContributionHistoryStatusFilter;
 
 const statusFilters = [
   { value: "all", label: "All statuses" },
@@ -37,65 +36,19 @@ export default function ContributionHistoryOverview() {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
-  const groupRecords = contributionRecords
-    .filter((record) => record.groupId === activeAjoGroup.id)
-    .slice()
-    .sort((a, b) => {
-      const dateOrder = (b.paidAt ?? b.dueDate).localeCompare(
-        a.paidAt ?? a.dueDate,
-      );
-      return dateOrder || a.id.localeCompare(b.id);
-    });
-  const availableCycleIds = new Set(
-    groupRecords.map((record) => record.cycleId),
-  );
-  const availableCycles = contributionCycles.filter(
-    (cycle) =>
-      cycle.groupId === activeAjoGroup.id && availableCycleIds.has(cycle.id),
-  );
-  const query = search.trim().toLocaleLowerCase();
-
-  const visibleRecords = groupRecords.filter((record) => {
-    const member = ajoMembers.find((item) => item.id === record.memberId);
-    const cycle = contributionCycles.find((item) => item.id === record.cycleId);
-    const recordDate = record.paidAt ?? record.dueDate;
-    const searchableText = [
-      member?.fullName ?? "",
-      cycle?.label ?? record.cycleId,
-      record.status,
-      recordDate,
-      record.id,
-    ]
-      .join(" ")
-      .toLocaleLowerCase();
-
-    return (
-      searchableText.includes(query) &&
-      (statusFilter === "all" || record.status === statusFilter) &&
-      (cycleFilter === "all" || record.cycleId === cycleFilter) &&
-      (!startDate || recordDate >= startDate) &&
-      (!endDate || recordDate <= endDate)
-    );
+  const {
+    availableCycles,
+    groupRecords,
+    hasFilters,
+    visibleRecords,
+    visibleTotals,
+  } = getContributionHistoryData(contributionRecords, {
+    search,
+    statusFilter,
+    cycleFilter,
+    startDate,
+    endDate,
   });
-
-  const visibleTotals = visibleRecords.reduce(
-    (totals, record) => {
-      totals.total += record.amount;
-      if (record.status === "paid") totals.paid += record.amount;
-      if (record.status === "pending" || record.status === "overdue") {
-        totals.outstanding += record.amount;
-      }
-      return totals;
-    },
-    { total: 0, paid: 0, outstanding: 0 },
-  );
-
-  const hasFilters =
-    search.length > 0 ||
-    statusFilter !== "all" ||
-    cycleFilter !== "all" ||
-    startDate !== "" ||
-    endDate !== "";
 
   function clearFilters() {
     setSearch("");
@@ -290,15 +243,8 @@ export default function ContributionHistoryOverview() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border">
-                    {visibleRecords.map((record) => {
-                      const member = ajoMembers.find(
-                        (item) => item.id === record.memberId,
-                      );
-                      const cycle = contributionCycles.find(
-                        (item) => item.id === record.cycleId,
-                      );
-
-                      return (
+                    {visibleRecords.map(
+                      ({ record, member, cycle, recordDate }) => (
                         <tr key={record.id} className="text-sm">
                           <td className="px-6 py-4 font-medium text-text-primary">
                             {member?.fullName ?? "Member unavailable"}
@@ -307,7 +253,7 @@ export default function ContributionHistoryOverview() {
                             {formatNaira(record.amount)}
                           </td>
                           <td className="px-6 py-4 text-text-secondary">
-                            {formatDate(record.paidAt ?? record.dueDate)}
+                            {formatDate(recordDate)}
                           </td>
                           <td className="px-6 py-4 text-text-secondary">
                             {cycle?.label ?? record.cycleId}
@@ -316,22 +262,15 @@ export default function ContributionHistoryOverview() {
                             <StatusBadge status={record.status} />
                           </td>
                         </tr>
-                      );
-                    })}
+                      ),
+                    )}
                   </tbody>
                 </table>
               </div>
 
               <ul className="divide-y divide-border md:hidden">
-                {visibleRecords.map((record) => {
-                  const member = ajoMembers.find(
-                    (item) => item.id === record.memberId,
-                  );
-                  const cycle = contributionCycles.find(
-                    (item) => item.id === record.cycleId,
-                  );
-
-                  return (
+                {visibleRecords.map(
+                  ({ record, member, cycle, recordDate }) => (
                     <li key={record.id} className="p-4 sm:p-5">
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0">
@@ -354,13 +293,13 @@ export default function ContributionHistoryOverview() {
                         <div>
                           <dt className="text-text-muted">Contribution date</dt>
                           <dd className="mt-1 font-semibold text-text-primary">
-                            {formatDate(record.paidAt ?? record.dueDate)}
+                            {formatDate(recordDate)}
                           </dd>
                         </div>
                       </dl>
                     </li>
-                  );
-                })}
+                  ),
+                )}
               </ul>
             </>
           )}
