@@ -123,12 +123,15 @@ export default function AuthPage({ mode }: AuthPageProps) {
                 error={errors.password}
                 action={
                   !signup && (
-                    <Link
-                      href="/login#password"
-                      className="text-xs font-semibold text-secondary underline decoration-secondary/30 underline-offset-4 hover:text-primary focus-visible:outline-2 focus-visible:outline-focus"
+                    <button
+                      type="button"
+                      disabled
+                      title="Password reset"
+                      aria-label="Forgot password?"
+                      className="text-xs font-semibold text-secondary/70 underline decoration-secondary/30 underline-offset-4 cursor-pointer"
                     >
                       Forgot password?
-                    </Link>
+                    </button>
                   )
                 }
               />
@@ -157,21 +160,8 @@ export default function AuthPage({ mode }: AuthPageProps) {
             <GoogleSignInButton />
             {signup && (
               <p className="mt-5 text-center text-[0.6875rem] leading-5 text-text-muted">
-                By creating an account, you agree to our{" "}
-                <a
-                  href="#terms"
-                  className="text-secondary underline underline-offset-2 hover:text-primary"
-                >
-                  Terms
-                </a>{" "}
-                and{" "}
-                <a
-                  href="#privacy"
-                  className="text-secondary underline underline-offset-2 hover:text-primary"
-                >
-                  Privacy Policy
-                </a>
-                .
+                By creating an account, you agree to our Terms and Privacy
+                Policy.
               </p>
             )}
           </div>

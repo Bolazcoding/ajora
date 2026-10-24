@@ -58,7 +58,7 @@ export default function AuthField({
             onClick={() => setVisible((current) => !current)}
             aria-label={`${visible ? "Hide" : "Show"} ${label.toLowerCase()}`}
             aria-pressed={visible}
-            className="absolute inset-y-0 right-0 grid w-12 place-items-center text-text-muted transition-colors hover:text-primary focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-focus"
+            className="absolute inset-y-0 right-0 grid w-12 place-items-center text-text-muted transition-colors hover:text-primary focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-focus cursor-pointer"
           >
             {visible ? (
               <FiEyeOff aria-hidden="true" className="size-[1.125rem]" />

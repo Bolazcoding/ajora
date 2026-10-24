@@ -26,9 +26,10 @@ export default function GoogleSignInButton() {
   return (
     <button
       type="button"
+      disabled
       aria-label="Continue with Google (not connected yet)"
       title="Google sign-in will be available soon"
-      className="flex h-[3.125rem] w-full items-center justify-center gap-3 rounded-xl border border-border bg-white text-sm font-semibold text-text-primary transition-colors hover:border-border-strong hover:bg-surface-soft focus-visible:outline-2 focus-visible:outline-focus focus-visible:outline-offset-2"
+      className="flex h-[3.125rem] w-full cursor-not-allowed items-center justify-center gap-3 rounded-xl border border-border bg-white text-sm font-semibold text-text-primary opacity-75"
     >
       <GoogleMark />
       Continue with Google

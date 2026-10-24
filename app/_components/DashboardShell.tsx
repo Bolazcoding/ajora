@@ -61,6 +61,7 @@ export default function DashboardShell({
   useEffect(() => {
     if (!isMobileNavOpen) return;
     const previousOverflow = document.body.style.overflow;
+    const menuButton = menuButtonRef.current;
     const closeOnEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") setIsMobileNavOpen(false);
     };
@@ -72,7 +73,7 @@ export default function DashboardShell({
     return () => {
       document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", closeOnEscape);
-      menuButtonRef.current?.focus();
+      menuButton?.focus();
     };
   }, [isMobileNavOpen]);
 
