@@ -8,13 +8,13 @@ import {
   contributionCycles,
 } from "../_data/mockData";
 import {
-  getActiveContributionMembers,
   getAvailableContributionCycles,
   getContributionCycleDateRange,
   hasPaidContributionRecord,
   validateRecordContributionForm,
   type RecordContributionFormErrors,
 } from "../_lib/calculations/record-contribution";
+import { getActiveGroupMembers } from "../_lib/calculations/shared";
 import { useContributionDemo } from "../_state/ContributionDemoProvider";
 import { formatNaira } from "../_ui/formatters";
 
@@ -57,10 +57,7 @@ export default function RecordContributionDialog({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [onClose]);
 
-  const activeMembers = getActiveContributionMembers(
-    ajoMembers,
-    activeAjoGroup,
-  );
+  const activeMembers = getActiveGroupMembers(ajoMembers, activeAjoGroup);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();

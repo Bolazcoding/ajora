@@ -5,6 +5,10 @@ import {
   type MemberContributionStatus,
   type PaymentStatus,
 } from "../../_data/mockData";
+import {
+  getActiveGroupMembers,
+  isContributionForMemberCycle,
+} from "./shared";
 
 export type MemberOverviewStatusFilter = "all" | PaymentStatus;
 
@@ -24,19 +28,18 @@ export function getMemberOverviewData(
   search: string,
   statusFilter: MemberOverviewStatusFilter,
 ) {
-  const memberRows: MemberOverviewRow[] = ajoMembers
-    .filter(
-      (member) =>
-        member.groupId === activeAjoGroup.id &&
-        member.isActive &&
-        activeAjoGroup.memberIds.includes(member.id),
-    )
-    .map((member) => {
+  const memberRows: MemberOverviewRow[] = getActiveGroupMembers(
+    ajoMembers,
+    activeAjoGroup,
+  ).map((member) => {
       const contribution = contributionRecords.find(
         (record) =>
-          record.groupId === activeAjoGroup.id &&
-          record.cycleId === activeAjoGroup.currentCycleId &&
-          record.memberId === member.id,
+          isContributionForMemberCycle(
+            record,
+            activeAjoGroup.id,
+            member.id,
+            activeAjoGroup.currentCycleId,
+          ),
       );
       const amountDue = activeAjoGroup.contributionAmount;
       const amountPaid =

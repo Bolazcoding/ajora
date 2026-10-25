@@ -14,6 +14,12 @@ import {
   contributionRecords as initialContributionRecords,
   type ContributionRecord,
 } from "../_data/mockData";
+import {
+  isContributionForMemberCycle,
+  isDateInContributionCycle,
+  isPositiveWholeNairaAmount,
+  isValidIsoDate,
+} from "../_lib/calculations/shared";
 
 export type RecordContributionInput = {
   memberId: string;
@@ -46,7 +52,7 @@ export function applyDemoContribution(
   records: readonly ContributionRecord[],
   input: RecordContributionInput,
 ): ApplyContributionResult {
-  if (!Number.isSafeInteger(input.amount) || input.amount <= 0) {
+  if (!isPositiveWholeNairaAmount(input.amount)) {
     return {
       contributionRecords: records,
       result: { ok: false, error: "Enter a valid whole-naira amount." },
@@ -93,12 +99,9 @@ export function applyDemoContribution(
     };
   }
 
-  const parsedDate = new Date(`${input.paidAt}T00:00:00.000Z`);
   if (
-    !/^\d{4}-\d{2}-\d{2}$/.test(input.paidAt) ||
-    Number.isNaN(parsedDate.getTime()) ||
-    parsedDate.toISOString().slice(0, 10) !== input.paidAt ||
-    !input.paidAt.startsWith(`${cycle.id}-`)
+    !isValidIsoDate(input.paidAt) ||
+    !isDateInContributionCycle(input.paidAt, cycle.id)
   ) {
     return {
       contributionRecords: records,
@@ -111,9 +114,12 @@ export function applyDemoContribution(
 
   const existingRecord = records.find(
     (record) =>
-      record.groupId === activeAjoGroup.id &&
-      record.memberId === member.id &&
-      record.cycleId === cycle.id,
+      isContributionForMemberCycle(
+        record,
+        activeAjoGroup.id,
+        member.id,
+        cycle.id,
+      ),
   );
   if (existingRecord?.status === "paid") {
     return {
