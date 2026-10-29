@@ -157,11 +157,12 @@ export default function RecordContributionDialog({
             </h3>
             <p className="mt-2 text-sm text-text-secondary">
               {formatNaira(success.amount)} was applied to the selected period.
-              Dashboard totals and payment status have been updated for this
-              session.
+              Dashboard totals and payment status now reflect this demo
+              contribution.
             </p>
             <p className="mt-3 text-xs text-text-muted">
-              Demo changes are held in memory and reset when the page reloads.
+              Demo data is saved in this browser and remains after reload. No
+              real financial transaction occurs.
             </p>
             <button
               type="button"

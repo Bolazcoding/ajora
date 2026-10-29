@@ -4,6 +4,7 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useState,
   type ReactNode,
 } from "react";
@@ -20,6 +21,148 @@ import {
   isPositiveWholeNairaAmount,
   isValidIsoDate,
 } from "../_lib/calculations/shared";
+
+const CONTRIBUTION_DEMO_STORAGE_KEY = "ajora:contribution-demo";
+const CONTRIBUTION_DEMO_STORAGE_VERSION = 1;
+
+type StoredContributionDemo = {
+  version: typeof CONTRIBUTION_DEMO_STORAGE_VERSION;
+  groupId: string;
+  records: ContributionRecord[];
+};
+
+function isStoredContributionRecord(
+  value: unknown,
+): value is ContributionRecord {
+  if (typeof value !== "object" || value === null || Array.isArray(value)) {
+    return false;
+  }
+
+  const record = value as Record<string, unknown>;
+  if (
+    typeof record.id !== "string" ||
+    typeof record.groupId !== "string" ||
+    typeof record.memberId !== "string" ||
+    typeof record.cycleId !== "string" ||
+    typeof record.amount !== "number" ||
+    typeof record.dueDate !== "string" ||
+    record.status !== "paid" ||
+    typeof record.paidAt !== "string" ||
+    record.groupId !== activeAjoGroup.id ||
+    !isPositiveWholeNairaAmount(record.amount) ||
+    record.amount !== activeAjoGroup.contributionAmount ||
+    !isValidIsoDate(record.dueDate) ||
+    !isValidIsoDate(record.paidAt)
+  ) {
+    return false;
+  }
+
+  const member = ajoMembers.find(
+    (item) =>
+      item.id === record.memberId &&
+      item.groupId === activeAjoGroup.id &&
+      item.isActive &&
+      activeAjoGroup.memberIds.includes(item.id),
+  );
+  const cycle = contributionCycles.find(
+    (item) => item.id === record.cycleId && item.groupId === record.groupId,
+  );
+  if (
+    !member ||
+    !cycle ||
+    !isDateInContributionCycle(record.dueDate, cycle.id) ||
+    !isDateInContributionCycle(record.paidAt, cycle.id)
+  ) {
+    return false;
+  }
+
+  const sampleRecord = initialContributionRecords.find((item) =>
+    isContributionForMemberCycle(item, activeAjoGroup.id, member.id, cycle.id),
+  );
+  return sampleRecord
+    ? record.id === sampleRecord.id && record.dueDate === sampleRecord.dueDate
+    : record.id === `contribution-demo-${cycle.id}-${member.id}` &&
+        record.dueDate === cycle.contributionDueDate;
+}
+
+function isStoredContributionDemo(
+  value: unknown,
+): value is StoredContributionDemo {
+  if (typeof value !== "object" || value === null || Array.isArray(value)) {
+    return false;
+  }
+
+  const stored = value as Record<string, unknown>;
+  if (
+    stored.version !== CONTRIBUTION_DEMO_STORAGE_VERSION ||
+    stored.groupId !== activeAjoGroup.id ||
+    !Array.isArray(stored.records) ||
+    !stored.records.every((record: unknown) =>
+      isStoredContributionRecord(record),
+    )
+  ) {
+    return false;
+  }
+
+  const recordKeys = stored.records.map(
+    (record: ContributionRecord) => `${record.memberId}:${record.cycleId}`,
+  );
+  return new Set(recordKeys).size === recordKeys.length;
+}
+
+function getContributionOverrides(
+  contributionRecords: readonly ContributionRecord[],
+) {
+  return contributionRecords.filter((record) => {
+    const sampleRecord = initialContributionRecords.find((item) =>
+      isContributionForMemberCycle(
+        item,
+        record.groupId,
+        record.memberId,
+        record.cycleId,
+      ),
+    );
+
+    return (
+      !sampleRecord ||
+      sampleRecord.id !== record.id ||
+      sampleRecord.amount !== record.amount ||
+      sampleRecord.status !== record.status ||
+      sampleRecord.paidAt !== record.paidAt
+    );
+  });
+}
+
+function mergeContributionOverrides(
+  overrides: readonly ContributionRecord[],
+): readonly ContributionRecord[] {
+  const mergedRecords = [...initialContributionRecords];
+
+  for (const override of overrides) {
+    const existingIndex = mergedRecords.findIndex((record) =>
+      isContributionForMemberCycle(
+        record,
+        override.groupId,
+        override.memberId,
+        override.cycleId,
+      ),
+    );
+
+    if (existingIndex >= 0) {
+      const sampleRecord = mergedRecords[existingIndex];
+      mergedRecords[existingIndex] = {
+        ...sampleRecord,
+        amount: override.amount,
+        status: override.status,
+        paidAt: override.paidAt,
+      };
+    } else {
+      mergedRecords.push(override);
+    }
+  }
+
+  return mergedRecords;
+}
 
 export type RecordContributionInput = {
   memberId: string;
@@ -112,14 +255,13 @@ export function applyDemoContribution(
     };
   }
 
-  const existingRecord = records.find(
-    (record) =>
-      isContributionForMemberCycle(
-        record,
-        activeAjoGroup.id,
-        member.id,
-        cycle.id,
-      ),
+  const existingRecord = records.find((record) =>
+    isContributionForMemberCycle(
+      record,
+      activeAjoGroup.id,
+      member.id,
+      cycle.id,
+    ),
   );
   if (existingRecord?.status === "paid") {
     return {
@@ -173,6 +315,72 @@ export function ContributionDemoProvider({
   const [contributionRecords, setContributionRecords] = useState<
     readonly ContributionRecord[]
   >(initialContributionRecords);
+  const [persistenceReady, setPersistenceReady] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    const restoreSavedDemo = () => {
+      if (cancelled) return;
+
+      let restoredRecords: readonly ContributionRecord[] | undefined;
+      try {
+        const serializedState = window.localStorage.getItem(
+          CONTRIBUTION_DEMO_STORAGE_KEY,
+        );
+
+        if (serializedState) {
+          let storedState: unknown;
+          try {
+            storedState = JSON.parse(serializedState);
+          } catch {
+            window.localStorage.removeItem(CONTRIBUTION_DEMO_STORAGE_KEY);
+          }
+
+          if (storedState !== undefined) {
+            if (isStoredContributionDemo(storedState)) {
+              restoredRecords = mergeContributionOverrides(storedState.records);
+            } else {
+              window.localStorage.removeItem(CONTRIBUTION_DEMO_STORAGE_KEY);
+            }
+          }
+        }
+      } catch {
+        // Storage may be unavailable or blocked; the in-memory demo still works.
+      }
+
+      if (cancelled) return;
+      if (restoredRecords) setContributionRecords(restoredRecords);
+      setPersistenceReady(true);
+    };
+
+    queueMicrotask(restoreSavedDemo);
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!persistenceReady) return;
+
+    try {
+      const overrides = getContributionOverrides(contributionRecords);
+      if (overrides.length === 0) {
+        window.localStorage.removeItem(CONTRIBUTION_DEMO_STORAGE_KEY);
+      } else {
+        const storedState: StoredContributionDemo = {
+          version: CONTRIBUTION_DEMO_STORAGE_VERSION,
+          groupId: activeAjoGroup.id,
+          records: [...overrides],
+        };
+        window.localStorage.setItem(
+          CONTRIBUTION_DEMO_STORAGE_KEY,
+          JSON.stringify(storedState),
+        );
+      }
+    } catch {
+      // Storage may be unavailable or full
+    }
+  }, [contributionRecords, persistenceReady]);
 
   const recordContribution = useCallback(
     (input: RecordContributionInput): RecordContributionResult => {
