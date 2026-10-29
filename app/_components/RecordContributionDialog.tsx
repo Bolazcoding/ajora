@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { FiCheckCircle, FiX } from "react-icons/fi";
 import {
   activeAjoGroup,
@@ -45,17 +45,102 @@ export default function RecordContributionDialog({
     message: string;
     amount: number;
   } | null>(null);
+  const dialogRef = useRef<HTMLElement>(null);
+  const successHeadingRef = useRef<HTMLHeadingElement>(null);
+  const onCloseRef = useRef(onClose);
   const selectedCycle = availableCycles.find((cycle) => cycle.id === cycleId);
   const cycleDateRange = getContributionCycleDateRange(cycleId);
 
   useEffect(() => {
-    function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") onClose();
+    onCloseRef.current = onClose;
+  }, [onClose]);
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+
+    const opener =
+      document.activeElement instanceof HTMLElement &&
+      document.activeElement !== document.body
+        ? document.activeElement
+        : null;
+    const previousInertValues = new Map<HTMLElement, boolean>();
+
+    // Keep only the dialog and its ancestor path active. This makes every
+    // background subtree inert while allowing the dialog to remain in place.
+    let current: HTMLElement = dialog;
+    while (current.parentElement) {
+      const parent = current.parentElement;
+      for (const child of Array.from(parent.children)) {
+        if (child instanceof HTMLElement && child !== current) {
+          previousInertValues.set(child, child.inert);
+          child.inert = true;
+        }
+      }
+      current = parent;
+      if (parent === document.body) break;
     }
 
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [onClose]);
+    const getFocusableElements = () =>
+      Array.from(
+        dialog.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ),
+      ).filter(
+        (element) =>
+          !element.hasAttribute("hidden") &&
+          element.getAttribute("aria-hidden") !== "true",
+      );
+
+    const initialFocus =
+      dialog.querySelector<HTMLElement>("[data-dialog-initial-focus]") ??
+      getFocusableElements()[0] ??
+      dialog;
+    initialFocus.focus();
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        onCloseRef.current();
+        return;
+      }
+      if (event.key !== "Tab") return;
+
+      const focusableElements = getFocusableElements();
+      const first = focusableElements[0];
+      const last = focusableElements[focusableElements.length - 1];
+      if (!first || !last) {
+        event.preventDefault();
+        dialog!.focus();
+        return;
+      }
+
+      const activeElement = document.activeElement;
+      if (!dialog!.contains(activeElement)) {
+        event.preventDefault();
+        (event.shiftKey ? last : first).focus();
+      } else if (event.shiftKey && activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    }
+
+    document.addEventListener("keydown", handleKeyDown, true);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown, true);
+      for (const [element, wasInert] of previousInertValues) {
+        element.inert = wasInert;
+      }
+      if (opener?.isConnected) opener.focus();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (success) successHeadingRef.current?.focus();
+  }, [success]);
 
   const activeMembers = getActiveGroupMembers(ajoMembers, activeAjoGroup);
 
@@ -120,9 +205,12 @@ export default function RecordContributionDialog({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-[#30251f]/55 p-4 backdrop-blur-[2px]">
       <section
+        ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby="record-contribution-title"
+        aria-describedby="record-contribution-description"
+        tabIndex={-1}
         className="my-auto w-full max-w-lg overflow-hidden rounded-2xl border border-border bg-surface-soft shadow-[0_1.5rem_4rem_rgb(48_37_31_/_28%)]"
       >
         <div className="flex items-start justify-between gap-4 border-b border-border px-5 py-4 sm:px-6">
@@ -133,7 +221,10 @@ export default function RecordContributionDialog({
             >
               Record contribution
             </h2>
-            <p className="mt-1 text-sm text-text-secondary">
+            <p
+              id="record-contribution-description"
+              className="mt-1 text-sm text-text-secondary"
+            >
               {activeAjoGroup.name}
             </p>
           </div>
@@ -152,7 +243,11 @@ export default function RecordContributionDialog({
             <span className="mx-auto grid size-12 place-items-center rounded-full bg-success-bg text-success">
               <FiCheckCircle aria-hidden="true" className="size-6" />
             </span>
-            <h3 className="mt-4 text-base font-semibold text-primary">
+            <h3
+              ref={successHeadingRef}
+              tabIndex={-1}
+              className="mt-4 text-base font-semibold text-primary"
+            >
               {success.message}
             </h3>
             <p className="mt-2 text-sm text-text-secondary">
@@ -178,7 +273,7 @@ export default function RecordContributionDialog({
               <label className="block text-sm font-medium text-text-primary">
                 Member
                 <select
-                  autoFocus
+                  data-dialog-initial-focus
                   value={memberId}
                   onChange={(event) => {
                     setMemberId(event.target.value);
