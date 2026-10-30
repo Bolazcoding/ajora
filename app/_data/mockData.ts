@@ -80,7 +80,7 @@ export type CycleContributionSummary = {
 
 export const activeAjoGroup: AjoGroup = {
   id: "ajo-lagos-circle",
-  name: "Lagos Growth Circle",
+  name: "The Prosperity Group",
   currency: "NGN",
   contributionAmount: 50_000,
   frequency: "monthly",
