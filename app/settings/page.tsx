@@ -1,8 +1,12 @@
-import { FiSettings } from "react-icons/fi";
+import { activeAjoGroup, ajoMembers } from "../_data/mockData";
 import DashboardShell from "../_components/DashboardShell";
-import EmptyState from "../_ui/EmptyState";
+import { formatNaira } from "../_ui/formatters";
 
 export default function SettingsPage() {
+  const activeMemberCount = ajoMembers.filter(
+    (member) => member.groupId === activeAjoGroup.id && member.isActive,
+  ).length;
+
   return (
     <DashboardShell activeItem="Settings">
       <div className="mx-auto w-full max-w-6xl pb-10">
@@ -10,15 +14,60 @@ export default function SettingsPage() {
           Settings
         </h2>
         <p className="mt-2 max-w-xl text-sm leading-6 text-text-secondary sm:text-base">
-          Manage your Ajora group and account preferences.
+          Demo account and group information.
         </p>
-        <section className="mt-7 rounded-2xl border border-border bg-white px-5 py-14 text-center shadow-card sm:mt-8">
-          <EmptyState
-            icon={FiSettings}
-            title="Settings page not available yet"
-            description="Your group details and contribution schedule are available from the dashboard overview."
-          />
-        </section>
+        <div className="mt-7 grid gap-5 sm:mt-8 lg:grid-cols-2">
+          <section className="rounded-2xl border border-border bg-white p-5 shadow-card sm:p-6">
+            <h3 className="font-sans text-lg font-semibold text-primary">
+              Demo account
+            </h3>
+            <dl className="mt-5 divide-y divide-border">
+              <div className="flex items-center justify-between gap-4 py-3 first:pt-0">
+                <dt className="text-sm text-text-secondary">Profile</dt>
+                <dd className="text-right text-sm font-medium text-text-primary">
+                  Mobolaji A.
+                </dd>
+              </div>
+              <div className="flex items-center justify-between gap-4 py-3 last:pb-0">
+                <dt className="text-sm text-text-secondary">Account type</dt>
+                <dd className="text-right text-sm font-medium text-text-primary">
+                  Frontend demo
+                </dd>
+              </div>
+            </dl>
+          </section>
+
+          <section className="rounded-2xl border border-border bg-white p-5 shadow-card sm:p-6">
+            <h3 className="font-sans text-lg font-semibold text-primary">
+              Active group
+            </h3>
+            <dl className="mt-5 divide-y divide-border">
+              <div className="flex items-center justify-between gap-4 py-3 first:pt-0">
+                <dt className="text-sm text-text-secondary">Group name</dt>
+                <dd className="text-right text-sm font-medium text-text-primary">
+                  {activeAjoGroup.name}
+                </dd>
+              </div>
+              <div className="flex items-center justify-between gap-4 py-3">
+                <dt className="text-sm text-text-secondary">Contribution</dt>
+                <dd className="text-right text-sm font-medium text-text-primary">
+                  {formatNaira(activeAjoGroup.contributionAmount)} /{" "}
+                  {activeAjoGroup.frequency}
+                </dd>
+              </div>
+              <div className="flex items-center justify-between gap-4 py-3 last:pb-0">
+                <dt className="text-sm text-text-secondary">Active members</dt>
+                <dd className="text-right text-sm font-medium text-text-primary">
+                  {activeMemberCount}
+                </dd>
+              </div>
+            </dl>
+          </section>
+        </div>
+        <p className="mt-5 rounded-xl border border-border bg-surface-soft px-4 py-3 text-sm leading-6 text-text-secondary">
+          Account and group details are sample data and can’t be changed here.
+          Contribution entries you add are saved only in this browser.
+        </p>
       </div>
     </DashboardShell>
   );

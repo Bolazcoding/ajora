@@ -66,8 +66,6 @@ export default function RecordContributionDialog({
         : null;
     const previousInertValues = new Map<HTMLElement, boolean>();
 
-    // Keep only the dialog and its ancestor path active. This makes every
-    // background subtree inert while allowing the dialog to remain in place.
     let current: HTMLElement = dialog;
     while (current.parentElement) {
       const parent = current.parentElement;

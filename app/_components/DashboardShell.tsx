@@ -6,7 +6,6 @@ import AjoMark from "../_ui/AjoMark";
 import {
   FiBell,
   FiCalendar,
-  FiChevronDown,
   FiClock,
   FiGrid,
   FiMenu,
@@ -150,13 +149,9 @@ export default function DashboardShell({
                 Mobolaji A.
               </span>
               <span className="mt-0.5 block text-xs text-text-secondary">
-                Your profile
+                Demo profile
               </span>
             </span>
-            <FiChevronDown
-              aria-hidden="true"
-              className="size-4 text-text-muted"
-            />
           </div>
         </div>
       </aside>
@@ -193,24 +188,24 @@ export default function DashboardShell({
             <div className="ml-auto flex items-center gap-2.5 sm:gap-3">
               <button
                 type="button"
-                aria-label="Notifications"
-                className="grid size-10 cursor-pointer place-items-center rounded-full border border-border bg-surface text-secondary transition-colors hover:bg-primary-light/50 focus-visible:outline-2 focus-visible:outline-focus focus-visible:outline-offset-2"
+                aria-label="Notifications unavailable in demo"
+                title="Notifications are unavailable in this demo"
+                disabled
+                className="grid size-10 cursor-not-allowed place-items-center rounded-full border border-border bg-surface text-text-muted opacity-60"
               >
                 <FiBell aria-hidden="true" className="size-5" />
               </button>
               <button
                 type="button"
-                aria-label="Profile menu"
-                className="flex cursor-pointer items-center gap-2 rounded-full sm:pl-1"
+                aria-label="Profile controls unavailable in demo"
+                title="Profile controls are unavailable in this demo"
+                disabled
+                className="flex cursor-not-allowed items-center gap-2 rounded-full opacity-60 sm:pl-1"
               >
                 <ProfileAvatar className="size-9 text-xs sm:size-10 sm:text-sm" />
                 <span className="hidden text-sm font-semibold text-primary lg:inline">
                   Mobolaji
                 </span>
-                <FiChevronDown
-                  aria-hidden="true"
-                  className="hidden size-4 text-text-muted lg:inline-flex"
-                />
               </button>
               <button
                 ref={menuButtonRef}
