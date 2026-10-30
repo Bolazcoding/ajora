@@ -28,6 +28,18 @@ export default function SettingsPage() {
                   Mobolaji A.
                 </dd>
               </div>
+              <div className="flex items-center justify-between gap-4 py-3">
+                <dt className="text-sm text-text-secondary">Country</dt>
+                <dd className="text-right text-sm font-medium text-text-primary">
+                  Nigeria
+                </dd>
+              </div>
+              <div className="flex items-center justify-between gap-4 py-3 last:pb-0">
+                <dt className="text-sm text-text-secondary">Time zone</dt>
+                <dd className="text-right text-sm font-medium text-text-primary">
+                  West Africa Time (WAT)
+                </dd>
+              </div>
             </dl>
           </section>
 
