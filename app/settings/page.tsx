@@ -14,24 +14,18 @@ export default function SettingsPage() {
           Settings
         </h2>
         <p className="mt-2 max-w-xl text-sm leading-6 text-text-secondary sm:text-base">
-          Demo account and group information.
+          Account and group information.
         </p>
         <div className="mt-7 grid gap-5 sm:mt-8 lg:grid-cols-2">
           <section className="rounded-2xl border border-border bg-white p-5 shadow-card sm:p-6">
             <h3 className="font-sans text-lg font-semibold text-primary">
-              Demo account
+              Account
             </h3>
             <dl className="mt-5 divide-y divide-border">
               <div className="flex items-center justify-between gap-4 py-3 first:pt-0">
                 <dt className="text-sm text-text-secondary">Profile</dt>
                 <dd className="text-right text-sm font-medium text-text-primary">
                   Mobolaji A.
-                </dd>
-              </div>
-              <div className="flex items-center justify-between gap-4 py-3 last:pb-0">
-                <dt className="text-sm text-text-secondary">Account type</dt>
-                <dd className="text-right text-sm font-medium text-text-primary">
-                  Frontend demo
                 </dd>
               </div>
             </dl>
@@ -64,10 +58,6 @@ export default function SettingsPage() {
             </dl>
           </section>
         </div>
-        <p className="mt-5 rounded-xl border border-border bg-surface-soft px-4 py-3 text-sm leading-6 text-text-secondary">
-          Account and group details are sample data and can’t be changed here.
-          Contribution entries you add are saved only in this browser.
-        </p>
       </div>
     </DashboardShell>
   );

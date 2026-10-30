@@ -149,7 +149,7 @@ export default function DashboardShell({
                 Mobolaji A.
               </span>
               <span className="mt-0.5 block text-xs text-text-secondary">
-                Demo profile
+                Profile
               </span>
             </span>
           </div>
@@ -188,8 +188,8 @@ export default function DashboardShell({
             <div className="ml-auto flex items-center gap-2.5 sm:gap-3">
               <button
                 type="button"
-                aria-label="Notifications unavailable in demo"
-                title="Notifications are unavailable in this demo"
+                aria-label="Notifications"
+                title="Notifications are unavailable"
                 disabled
                 className="grid size-10 cursor-not-allowed place-items-center rounded-full border border-border bg-surface text-text-muted opacity-60"
               >
@@ -197,8 +197,8 @@ export default function DashboardShell({
               </button>
               <button
                 type="button"
-                aria-label="Profile controls unavailable in demo"
-                title="Profile controls are unavailable in this demo"
+                aria-label="Profile"
+                title="Profile controls are unavailable"
                 disabled
                 className="flex cursor-not-allowed items-center gap-2 rounded-full opacity-60 sm:pl-1"
               >

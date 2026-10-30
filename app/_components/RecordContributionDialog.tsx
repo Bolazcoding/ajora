@@ -182,8 +182,8 @@ export default function RecordContributionDialog({
     setSuccess({
       message:
         result.action === "added"
-          ? "Demo contribution added."
-          : "Demo contribution recorded. The existing unpaid record was marked paid.",
+          ? "Contribution added."
+          : "Contribution recorded. The existing unpaid record was marked paid.",
       amount: result.record.amount,
     });
   }
@@ -250,12 +250,7 @@ export default function RecordContributionDialog({
             </h3>
             <p className="mt-2 text-sm text-text-secondary">
               {formatNaira(success.amount)} was applied to the selected period.
-              Dashboard totals and payment status now reflect this demo
-              contribution.
-            </p>
-            <p className="mt-3 text-xs text-text-muted">
-              Demo data is saved in this browser and remains after reload. No
-              real financial transaction occurs.
+              Dashboard totals and payment status now reflect this contribution.
             </p>
             <button
               type="button"
@@ -427,7 +422,7 @@ export default function RecordContributionDialog({
                 type="submit"
                 className="min-h-11 cursor-pointer rounded-xl bg-primary px-5 text-sm font-semibold text-white transition-colors hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-focus focus-visible:outline-offset-2"
               >
-                Record demo contribution
+                Record contribution
               </button>
             </div>
           </form>

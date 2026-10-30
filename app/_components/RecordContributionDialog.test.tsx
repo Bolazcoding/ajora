@@ -60,7 +60,7 @@ describe("RecordContributionDialog keyboard accessibility", () => {
       name: "Close record contribution dialog",
     });
     const submitButton = within(dialog).getByRole("button", {
-      name: "Record demo contribution",
+      name: "Record contribution",
     });
 
     submitButton.focus();
@@ -97,12 +97,12 @@ describe("RecordContributionDialog keyboard accessibility", () => {
     );
     await user.click(
       within(dialog).getByRole("button", {
-        name: "Record demo contribution",
+        name: "Record contribution",
       }),
     );
 
     const confirmation = screen.getByRole("heading", {
-      name: "Demo contribution recorded. The existing unpaid record was marked paid.",
+      name: "Contribution recorded. The existing unpaid record was marked paid.",
     });
     expect(confirmation).toHaveFocus();
     expect(confirmation.closest('[role="dialog"]')).toBeInTheDocument();
