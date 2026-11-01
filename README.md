@@ -1,90 +1,94 @@
 # Ajora
 
-Ajora is a web-based platform concept for managing rotating Ajo contribution groups. It helps group organisers and members view contribution summaries, track payment statuses, and follow payout turns from one dashboard.
+Ajora is a frontend web application that helps Ajo group organizers manage contributions, members, payout schedules, and contribution history. It is built as a responsive prototype for BuildLab Africa Stage 1.
 
-This project is being developed as part of the BuildLab Africa Stage 1 Frontend Development programme.
+## The problem
 
-## Project Overview
+Ajo groups often coordinate through chats or spreadsheets, making it difficult to see who has contributed, what remains outstanding, and whose payout turn is next. Ajora brings these details together in a shared dashboard.
 
-Traditional Ajo groups often rely on chats or spreadsheets to coordinate contributions and payout schedules. Ajora aims to make this process easier to follow through a clear, responsive dashboard.
+## Features and views
 
-## Features
+- **Overview (`/dashboard`)** — group details, contribution totals and progress, and the next payout.
+- **Members (`/members`)** — member contribution summaries with name search and payment-status filters.
+- **Payout Schedule (`/payout-schedule`)** — payout rotation, recipients, dates, and payout statuses.
+- **Contribution History (`/contribution-history`)** — contribution records with search, filters, and visible totals.
+- **Settings (`/settings`)** — displayed account and active-group information.
+- **Login (`/login`) and Sign-Up (`/signup`)** — client-side form validation and navigation for the prototype.
+- **Home (`/`)** — Ajora introduction and links into the application.
+- A branded not-found page is shown for unknown routes.
+- A valid demo contribution updates the shared dashboard state and is saved in browser `localStorage`, so it persists across refreshes in that browser.
 
-- Dashboard overview for contribution summaries.
-- Member and contribution tracking.
-- Payout order and upcoming payout information.
-- Responsive interface for desktop and mobile screens.
-- Interactive UI elements for navigating and managing displayed information.
+## Technology
 
-## Tech Stack
+- Next.js 16 App Router
+- React 19
+- TypeScript
+- Tailwind CSS 4
+- `react-icons`
+- Vitest, JSDOM, and React Testing Library for automated tests
 
-- **Next.js** — React framework.
-- **TypeScript** — Type-safe JavaScript.
-- **Tailwind CSS** — Utility-first styling.
-- **Mock data** — Sample data for the frontend prototype.
-- **Vercel** — Deployment platform.
+## Getting started
 
-## Getting Started
+### Requirements
 
-### Prerequisites
+- Node.js
+- npm
+- Git
 
-- Node.js installed.
-- npm installed.
-- Git installed.
-
-### Installation
-
-Clone the repository:
+### Install and run locally
 
 ```bash
 git clone https://github.com/Bolazcoding/ajora.git
-```
-
-Navigate into the project directory:
-
-```bash
 cd ajora
-```
-
-Install dependencies:
-
-```bash
 npm install
-```
-
-Start the development server:
-
-```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+Open [http://localhost:3000](http://localhost:3000).
 
-### Other Commands
+## Routes
+
+| Route                   | View                 |
+| ----------------------- | -------------------- |
+| `/`                     | Home                 |
+| `/dashboard`            | Dashboard Overview   |
+| `/members`              | Members              |
+| `/payout-schedule`      | Payout Schedule      |
+| `/contribution-history` | Contribution History |
+| `/settings`             | Settings             |
+| `/login`                | Login                |
+| `/signup`               | Sign-Up              |
+| Any unknown route       | Not-found page       |
+
+## Project commands
 
 ```bash
+npm run dev
+npm run lint
+npx tsc --noEmit --incremental false
+npm test
 npm run build
 npm run start
 ```
 
-Run `npm run build` to build the production application. Run `npm run start` after a successful build to start the production server.
+`npm run start` serves the production build created by `npm run build`.
 
-These commands assume the corresponding scripts are defined in `package.json`.
+## Sample data and limitations
 
-## Live Demo
+Ajora uses sample Ajo group data and fixed demonstration dates. Dates and statuses represent a demo scenario and do not automatically advance with the calendar. Contribution changes are stored only in the current browser's `localStorage`; clearing browser storage removes those demo changes.
 
-https://mobolaji-ajora.vercel.app/
+Authentication is not implemented. The login and sign-up forms perform client-side validation only; passing validation navigates to the dashboard and does not create an authenticated account or session. Google sign-in and password reset are not connected. The app does not process payments, transfer funds, or manage real money. It has no backend or database.
 
-## Repository
+## Testing and verification
 
-https://github.com/Bolazcoding/ajora
+The following project checks completed successfully:
 
-## Project Scope
+- ESLint passed with `npm run lint`.
+- TypeScript passed with `npx tsc --noEmit --incremental false`.
+- **7 automated tests passed across 2 test files** with `npm test`.
+- Production build completed successfully with `npm run build`.
 
-Ajora is currently a frontend prototype using mock/sample data. Real-money transactions, bank integrations, and production backend functionality are outside the current scope.
+## Links
 
-## Development Plan
-
-- **Week 1 — Foundations:** Responsive screen, initial interactions, project documentation and deployment.
-- **Week 2 — Components and Data:** Reusable components, mock-data integration, interface states and feedback improvements.
-- **Week 3 — Quality and Delivery:** Routing, state management, accessibility checks, automated tests and final documentation.
+- **GitHub repository:** [github.com/Bolazcoding/ajora](https://github.com/Bolazcoding/ajora)
+- **Deployed application:** [mobolaji-ajora.vercel.app](https://mobolaji-ajora.vercel.app/)
