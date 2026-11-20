@@ -269,37 +269,35 @@ export default function ContributionHistoryOverview() {
               </div>
 
               <ul className="divide-y divide-border md:hidden">
-                {visibleRecords.map(
-                  ({ record, member, cycle, recordDate }) => (
-                    <li key={record.id} className="p-4 sm:p-5">
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="min-w-0">
-                          <p className="truncate text-sm font-semibold text-text-primary">
-                            {member?.fullName ?? "Member unavailable"}
-                          </p>
-                          <p className="mt-1 text-xs text-text-secondary">
-                            {cycle?.label ?? record.cycleId}
-                          </p>
-                        </div>
-                        <StatusBadge status={record.status} />
+                {visibleRecords.map(({ record, member, cycle, recordDate }) => (
+                  <li key={record.id} className="p-4 sm:p-5">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <p className="truncate text-sm font-semibold text-text-primary">
+                          {member?.fullName ?? "Member unavailable"}
+                        </p>
+                        <p className="mt-1 text-xs text-text-secondary">
+                          {cycle?.label ?? record.cycleId}
+                        </p>
                       </div>
-                      <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 text-xs">
-                        <div>
-                          <dt className="text-text-muted">Amount</dt>
-                          <dd className="mt-1 font-semibold text-text-primary">
-                            {formatNaira(record.amount)}
-                          </dd>
-                        </div>
-                        <div>
-                          <dt className="text-text-muted">Contribution date</dt>
-                          <dd className="mt-1 font-semibold text-text-primary">
-                            {formatDate(recordDate)}
-                          </dd>
-                        </div>
-                      </dl>
-                    </li>
-                  ),
-                )}
+                      <StatusBadge status={record.status} />
+                    </div>
+                    <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 text-xs">
+                      <div>
+                        <dt className="text-text-muted">Amount</dt>
+                        <dd className="mt-1 font-semibold text-text-primary">
+                          {formatNaira(record.amount)}
+                        </dd>
+                      </div>
+                      <div>
+                        <dt className="text-text-muted">Contribution date</dt>
+                        <dd className="mt-1 font-semibold text-text-primary">
+                          {formatDate(recordDate)}
+                        </dd>
+                      </div>
+                    </dl>
+                  </li>
+                ))}
               </ul>
             </>
           )}

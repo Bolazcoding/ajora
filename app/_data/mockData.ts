@@ -86,7 +86,7 @@ export const activeAjoGroup: AjoGroup = {
   frequency: "monthly",
   contributionDueDay: 10,
   startDate: "2026-06-01",
-  currentCycleId: "2026-10",
+  currentCycleId: "2026-11",
   memberIds: [
     "member-001",
     "member-002",
@@ -182,18 +182,31 @@ export const contributionCycles: readonly ContributionCycle[] = [
     groupId: activeAjoGroup.id,
     label: "October 2026",
     contributionDueDate: "2026-10-10",
-    status: "current",
+    status: "completed",
   },
   {
     id: "2026-11",
     groupId: activeAjoGroup.id,
     label: "November 2026",
     contributionDueDate: "2026-11-10",
+    status: "current",
+  },
+  {
+    id: "2026-12",
+    groupId: activeAjoGroup.id,
+    label: "December 2026",
+    contributionDueDate: "2026-12-10",
     status: "upcoming",
   },
 ];
 
-const completedCycleIds = ["2026-06", "2026-07", "2026-08", "2026-09"] as const;
+const completedCycleIds = [
+  "2026-06",
+  "2026-07",
+  "2026-08",
+  "2026-09",
+  "2026-10",
+] as const;
 
 const historicalContributions: ContributionRecord[] = completedCycleIds.flatMap(
   (cycleId) =>
@@ -218,48 +231,48 @@ const currentCyclePayments: ReadonlyArray<{
   {
     memberId: "member-001",
     status: "paid",
-    dueDate: "2026-10-10",
-    paidAt: "2026-10-08",
+    dueDate: "2026-11-10",
+    paidAt: "2026-11-08",
   },
   {
     memberId: "member-002",
     status: "paid",
-    dueDate: "2026-10-10",
-    paidAt: "2026-10-09",
+    dueDate: "2026-11-10",
+    paidAt: "2026-11-09",
   },
   {
     memberId: "member-003",
     status: "paid",
-    dueDate: "2026-10-10",
-    paidAt: "2026-10-09",
+    dueDate: "2026-11-10",
+    paidAt: "2026-11-09",
   },
   {
     memberId: "member-004",
     status: "paid",
-    dueDate: "2026-10-10",
-    paidAt: "2026-10-10",
+    dueDate: "2026-11-10",
+    paidAt: "2026-11-10",
   },
   {
     memberId: "member-005",
     status: "overdue",
-    dueDate: "2026-10-10",
+    dueDate: "2026-11-10",
     paidAt: null,
   },
-  // This member has an agreed extension through October 28.
+  // This member has an agreed extension through November 28.
   {
     memberId: "member-006",
     status: "pending",
-    dueDate: "2026-10-28",
+    dueDate: "2026-11-28",
     paidAt: null,
   },
 ];
 
 const currentCycleContributions: ContributionRecord[] =
   currentCyclePayments.map(({ memberId, status, dueDate, paidAt }) => ({
-    id: `contribution-2026-10-${memberId}`,
+    id: `contribution-2026-11-${memberId}`,
     groupId: activeAjoGroup.id,
     memberId,
-    cycleId: "2026-10",
+    cycleId: "2026-11",
     amount: activeAjoGroup.contributionAmount,
     dueDate,
     status,
@@ -268,12 +281,12 @@ const currentCycleContributions: ContributionRecord[] =
 
 const upcomingCycleContributions: ContributionRecord[] = ajoMembers.map(
   (member) => ({
-    id: `contribution-2026-11-${member.id}`,
+    id: `contribution-2026-12-${member.id}`,
     groupId: activeAjoGroup.id,
     memberId: member.id,
-    cycleId: "2026-11",
+    cycleId: "2026-12",
     amount: activeAjoGroup.contributionAmount,
-    dueDate: "2026-11-10",
+    dueDate: "2026-12-10",
     status: "pending",
     paidAt: null,
   }),
@@ -333,8 +346,8 @@ export const payoutSchedule: readonly PayoutRecord[] = [
     turn: 5,
     recipientMemberId: "member-005",
     payoutDate: "2026-10-30",
-    status: "upcoming",
-    completedAt: null,
+    status: "completed",
+    completedAt: "2026-10-30",
   },
   {
     id: "payout-2026-11",
@@ -343,6 +356,16 @@ export const payoutSchedule: readonly PayoutRecord[] = [
     turn: 6,
     recipientMemberId: "member-006",
     payoutDate: "2026-11-30",
+    status: "upcoming",
+    completedAt: null,
+  },
+  {
+    id: "payout-2026-12",
+    groupId: activeAjoGroup.id,
+    cycleId: "2026-12",
+    turn: 1,
+    recipientMemberId: "member-001",
+    payoutDate: "2026-12-30",
     status: "upcoming",
     completedAt: null,
   },
